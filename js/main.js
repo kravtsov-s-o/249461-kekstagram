@@ -52,9 +52,7 @@ function randomUrl() {
   return Math.random() - 0.5;
 }
 
-var newUrl = URL.sort(randomUrl);
-
-function getRandomInt(min, max) {
+function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -67,8 +65,8 @@ var makePosts = function (quantityPhotos) {
 
   for (var i = 0; i < quantityPhotos; i++) {
     var photo = {
-      url: newUrl[i],
-      likes: getRandomInt(15, 200),
+      url: URL.sort(randomUrl)[i],
+      likes: getRandom(15, 200),
       quantityComments: quantityComments(),
       comments: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
       description: DESCRIPTIONS[Math.floor(Math.random() * DESCRIPTIONS.length)]
