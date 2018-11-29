@@ -28,13 +28,22 @@ var URL = [
   'photos/25.jpg'
 ];
 
-var COMMENTS = [
+var TEXT_COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+];
+
+var NAME_COMMENTS = [
+  'Артем',
+  'Лена',
+  'Вася',
+  'Катя',
+  'Вова',
+  'Таня'
 ];
 
 var DESCRIPTIONS = [
@@ -46,29 +55,48 @@ var DESCRIPTIONS = [
   'Вот это тачка!'
 ];
 
-var QUANTITY_PHOTOS = 25;
+var QUANTITY_POSTS = 25;
 
+/* Перетасовка фотографий в случайном порядке */
 function randomUrl() {
   return Math.random() - 0.5;
 }
+
+var newUrl = URL.sort(randomUrl);
 
 function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-function quantityComments() {
+function quantityCommentsCounter() {
   return Math.floor(Math.random() * 100);
 }
+
+var makeComments = function (quantityComments) {
+  var comments = [];
+
+  for (var i = 0; i < quantityComments; i++) {
+    var comment = {
+      avatar: 'img/avatar-' + getRandom(1, 6) + '.svg',
+      message: TEXT_COMMENTS[Math.floor(Math.random() * TEXT_COMMENTS.length)],
+      name: NAME_COMMENTS[Math.floor(Math.random() * NAME_COMMENTS.length)]
+    };
+    comments.push(comment);
+  }
+  return comments;
+};
+
+var commentsList = makeComments(QUANTITY_POSTS);
 
 var makePosts = function (quantityPhotos) {
   var photos = [];
 
   for (var i = 0; i < quantityPhotos; i++) {
     var photo = {
-      url: URL.sort(randomUrl)[i],
+      url: newUrl[i],
       likes: getRandom(15, 200),
-      quantityComments: quantityComments(),
-      comments: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
+      quantityComments: quantityCommentsCounter(),
+      comments: commentsList.sort(randomUrl)[i],
       description: DESCRIPTIONS[Math.floor(Math.random() * DESCRIPTIONS.length)]
     };
     photos.push(photo);
@@ -76,7 +104,7 @@ var makePosts = function (quantityPhotos) {
   return photos;
 };
 
-var photosList = makePosts(QUANTITY_PHOTOS);
+var photosList = makePosts(QUANTITY_POSTS);
 
 var photoListElement = document.querySelector('.pictures');
 var templatePhotoSomeUser = document.querySelector('#picture').content;
@@ -107,6 +135,30 @@ bigPhoto.querySelector('.big-picture__img img').src = photosList[0].url;
 bigPhoto.querySelector('.big-picture__social .social__caption').textContent = photosList[0].description;
 bigPhoto.querySelector('.big-picture__social .likes-count').textContent = photosList[0].likes;
 bigPhoto.querySelector('.comments-count').textContent = photosList[0].quantityComments;
+
+var socialComments = bigPhoto.querySelector('.social__comments');
+// var socialComment = bigPhoto.querySelector('.social_comment');
+while (socialComments.firstChild) {
+  socialComments.removeChild(socialComments.firstChild);
+}
+
+var customComment = document.createElement('li');
+customComment.className = 'social__comment';
+
+var customAvatar = document.createElement('img');
+customAvatar.className = 'social__picture';
+customAvatar.src = photosList[0].comments.avatar;
+customAvatar.alt = 'Аватар комментатора фотографии';
+customAvatar.width = '35';
+customAvatar.height = '35';
+
+var customMessage = document.createElement('p');
+customMessage.className = 'social__text';
+customMessage.textContent = photosList[0].comments.message;
+
+customComment.appendChild(customAvatar);
+customComment.appendChild(customMessage);
+socialComments.appendChild(customComment);
 
 var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
 var commentsLoader = bigPhoto.querySelector('.comments-loader');
