@@ -30,42 +30,30 @@ var DESCRIPTIONS = [
 var QUANTITY_POSTS = 25;
 var AVATAR_SIZE = '35';
 
-/* Перетасовка фотографий в случайном порядке */
-function randomUrl() {
-  return Math.random() - 0.5;
-}
-
 /* случайное число в указаном диапазоне */
 function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-/* случайное число */
-function quantityCommentsCounter() {
-  return Math.floor(Math.random() * 100);
-}
-
 /* случайное значение из массива */
-function rendomElementMassive(nameMassive) {
+function randomElementMassive(nameMassive) {
   return nameMassive[Math.floor(Math.random() * nameMassive.length)];
 }
 
-/* функция генерации комментария */
-function makeCommentsList(quantityComments) {
+/* генерация списка комментариев к фото */
+function makeCommentsList() {
   var comments = [];
 
-  for (var i = 0; i < quantityComments; i++) {
+  for (var i = 0; i < getRandom(1, 3); i++) {
     var comment = {
       avatar: 'img/avatar-' + getRandom(1, 6) + '.svg',
-      message: rendomElementMassive(TEXT_COMMENTS),
-      name: rendomElementMassive(NAME_COMMENTS)
+      message: randomElementMassive(TEXT_COMMENTS),
+      name: randomElementMassive(NAME_COMMENTS)
     };
     comments.push(comment);
   }
   return comments;
 }
-
-var commentsList = makeCommentsList(QUANTITY_POSTS);
 
 /* генерация поста */
 function makePosts(quantityPhotos) {
@@ -75,9 +63,9 @@ function makePosts(quantityPhotos) {
     var photo = {
       url: 'photos/' + i + '.jpg',
       likes: getRandom(15, 200),
-      quantityComments: quantityCommentsCounter(),
-      comments: commentsList.sort(randomUrl)[i],
-      description: rendomElementMassive(DESCRIPTIONS)
+      quantityComments: makeCommentsList(QUANTITY_POSTS).length,
+      comments: makeCommentsList(QUANTITY_POSTS),
+      description: randomElementMassive(DESCRIPTIONS)
     };
     photos.push(photo);
   }
@@ -89,7 +77,6 @@ var photosList = makePosts(QUANTITY_POSTS);
 var photoListElement = document.querySelector('.pictures');
 var templatePhotoSomeUser = document.querySelector('#picture').content;
 
-/* большое фото */
 function renderPhoto(generatePhoto) {
   var photoElement = templatePhotoSomeUser.cloneNode(true);
 
@@ -110,15 +97,15 @@ photoListElement.appendChild(fragment);
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
 
-var massiveElement = photosList[0];
+var massiveElement = 0;
 
 function renderBigPhoto(numberElement) {
   var photo = bigPicture.querySelector('.big-picture__preview');
 
-  photo.querySelector('.big-picture__img img').src = numberElement.url;
-  photo.querySelector('.big-picture__social .social__caption').textContent = numberElement.description;
-  photo.querySelector('.big-picture__social .likes-count').textContent = numberElement.likes;
-  photo.querySelector('.comments-count').textContent = numberElement.quantityComments;
+  photo.querySelector('.big-picture__img img').src = photosList[numberElement].url;
+  photo.querySelector('.big-picture__social .social__caption').textContent = photosList[numberElement].description;
+  photo.querySelector('.big-picture__social .likes-count').textContent = photosList[numberElement].likes;
+  photo.querySelector('.comments-count').textContent = photosList[numberElement].quantityComments;
 
   return photo;
 }
@@ -128,29 +115,52 @@ var bigPhoto = renderBigPhoto(massiveElement);
 var socialComments = bigPhoto.querySelector('.social__comments');
 socialComments.innerHTML = '';
 
-function renderComment(renderCustomComment) {
-  var customComment = document.createElement('li');
-  customComment.className = 'social__comment';
+/* генерация аватара комментатора */
+function renderAvatar(generateAvatar, i) {
+  var avatar = document.createElement('img');
+  avatar.className = 'social__picture';
+  avatar.src = photosList[generateAvatar].comments[i].avatar;
+  avatar.alt = 'Аватар комментатора фотографии';
+  avatar.width = AVATAR_SIZE;
+  avatar.height = AVATAR_SIZE;
 
-  var customAvatar = document.createElement('img');
-  customAvatar.className = 'social__picture';
-  customAvatar.src = renderCustomComment.comments.avatar;
-  customAvatar.alt = 'Аватар комментатора фотографии';
-  customAvatar.width = AVATAR_SIZE;
-  customAvatar.height = AVATAR_SIZE;
-
-  var customMessage = document.createElement('p');
-  customMessage.className = 'social__text';
-  customMessage.textContent = renderCustomComment.comments.message;
-
-  customComment.appendChild(customAvatar);
-  customComment.appendChild(customMessage);
-
-  return customComment;
+  return avatar;
 }
 
-var customComment = renderComment(massiveElement);
-socialComments.appendChild(customComment);
+/* генерация сообщения комментатора */
+function renderMessage(generateMessage, i) {
+  var message = document.createElement('p');
+  message.className = 'social__text';
+  message.textContent = photosList[generateMessage].comments[i].message;
+
+  return message;
+}
+
+/* генерация комментария */
+function renderComment(generateComment, i) {
+  var comment = document.createElement('li');
+  comment.className = 'social__comment';
+
+  comment.appendChild(renderAvatar(generateComment, i));
+  comment.appendChild(renderMessage(generateComment, i));
+
+  return comment;
+}
+
+var custCommet = renderComment(massiveElement, 0);
+
+function renderCommentsList(photosNumber) {
+  var commentsList = [];
+
+  for (var i = 0; i < photosList[photosNumber].quantityComments; i++) {
+    var customComment = renderComment(photosNumber, i);
+    commentsList.push(customComment);
+  }
+
+  return commentsList;
+}
+var customCommentList = renderCommentsList(massiveElement);
+socialComments.innerHTML = customCommentList;
 
 // Скрытие кол-ва комментариев и загрузки дополнительных
 var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
