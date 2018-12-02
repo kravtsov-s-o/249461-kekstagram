@@ -147,8 +147,6 @@ function renderComment(generateComment, i) {
   return comment;
 }
 
-var custCommet = renderComment(massiveElement, 0);
-
 function renderCommentsList(photosNumber) {
   var commentsList = [];
 
@@ -159,8 +157,12 @@ function renderCommentsList(photosNumber) {
 
   return commentsList;
 }
+
 var customCommentList = renderCommentsList(massiveElement);
-socialComments.innerHTML = customCommentList;
+
+for (var i = 0; i <= customCommentList.length; i++) {
+  socialComments.appendChild(customCommentList[i]);
+}
 
 // Скрытие кол-ва комментариев и загрузки дополнительных
 var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
