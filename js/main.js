@@ -44,7 +44,7 @@ function randomElementMassive(nameMassive) {
 function makeCommentsList() {
   var comments = [];
 
-  for (var i = 0; i < getRandom(1, 3); i++) {
+  for (var i = 0; i <= getRandom(1, 2); i++) {
     var comment = {
       avatar: 'img/avatar-' + getRandom(1, 6) + '.svg',
       message: randomElementMassive(TEXT_COMMENTS),
@@ -95,7 +95,7 @@ for (var j = 0; j < photosList.length; j++) {
 photoListElement.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+// bigPicture.classList.remove('hidden');
 
 var arrayElement = photosList[0];
 
