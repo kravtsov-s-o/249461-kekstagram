@@ -95,7 +95,7 @@ for (var j = 0; j < photosList.length; j++) {
 photoListElement.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
-// bigPicture.classList.remove('hidden');
+bigPicture.classList.remove('hidden');
 
 var arrayElement = photosList[0];
 
@@ -160,13 +160,17 @@ function renderCommentsList(photosNumber) {
 
 var commentsList = renderCommentsList(arrayElement);
 
-var fragmentComments = document.createDocumentFragment();
+function addCommentsList(addedСomments) {
+  var fragmentComments = document.createDocumentFragment();
 
-for (var i = 0; i < commentsList.length; i++) {
-  fragmentComments.appendChild(commentsList[i]);
+  for (var i = 0; i < commentsList.length; i++) {
+    fragmentComments.appendChild(addedСomments[i]);
+  }
+
+  return fragmentComments;
 }
 
-socialComments.appendChild(fragmentComments);
+socialComments.appendChild(addCommentsList(commentsList));
 
 // Скрытие кол-ва комментариев и загрузки дополнительных
 var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
