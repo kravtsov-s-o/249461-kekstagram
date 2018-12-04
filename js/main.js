@@ -170,6 +170,13 @@ function addCommentsList(addedСomments) {
   return fragmentComments;
 }
 
+function renderCard(photoNumber) {
+  renderBigPhoto(photoNumber);
+  renderCommentsList(photoNumber);
+}
+
+renderCard(photosList[3]);
+
 socialComments.appendChild(addCommentsList(commentsList));
 
 // Скрытие кол-ва комментариев и загрузки дополнительных
