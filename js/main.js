@@ -112,10 +112,23 @@ function renderBigPhoto(photoNumber) {
   return photo;
 }
 
-var bigPhoto = renderBigPhoto(arrayElement);
+function renderCard(photoNumber) {
+  var bigPhoto = renderBigPhoto(photoNumber);
 
-var socialComments = bigPhoto.querySelector('.social__comments');
-socialComments.innerHTML = '';
+  var socialComments = bigPhoto.querySelector('.social__comments');
+  socialComments.innerHTML = '';
+
+  socialComments.appendChild(addCommentsList(commentsList));
+
+  // Скрытие кол-ва комментариев и загрузки дополнительных
+  var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
+  var commentsLoader = bigPhoto.querySelector('.comments-loader');
+
+  socialCommentCount.classList.add('hidden');
+  commentsLoader.classList.add('hidden');
+}
+
+renderCard(photosList[0]);
 
 /* генерация аватара комментатора */
 function renderAvatar(autorsAvatar, i) {
@@ -172,17 +185,4 @@ function addCommentsList(addedСomments) {
   return fragmentComments;
 }
 
-function renderCard(photoNumber) {
-  renderBigPhoto(photoNumber);
-}
 
-renderCard(photosList[0]);
-
-socialComments.appendChild(addCommentsList(commentsList));
-
-// Скрытие кол-ва комментариев и загрузки дополнительных
-var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
-var commentsLoader = bigPhoto.querySelector('.comments-loader');
-
-socialCommentCount.classList.add('hidden');
-commentsLoader.classList.add('hidden');
