@@ -107,6 +107,8 @@ function renderBigPhoto(photoNumber) {
   photo.querySelector('.big-picture__social .likes-count').textContent = photoNumber.likes;
   photo.querySelector('.comments-count').textContent = photoNumber.commentsCount;
 
+  renderCommentsList(photoNumber);
+
   return photo;
 }
 
@@ -172,10 +174,9 @@ function addCommentsList(addedСomments) {
 
 function renderCard(photoNumber) {
   renderBigPhoto(photoNumber);
-  renderCommentsList(photoNumber);
 }
 
-renderCard(photosList[3]);
+renderCard(photosList[0]);
 
 socialComments.appendChild(addCommentsList(commentsList));
 
