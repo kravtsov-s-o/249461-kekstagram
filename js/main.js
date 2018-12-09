@@ -95,7 +95,6 @@ for (var j = 0; j < photosList.length; j++) {
 photoListElement.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
 
 var arrayElement = photosList[0];
 
@@ -184,3 +183,159 @@ function renderCard(photoNumber) {
 }
 
 renderCard(photosList[0]);
+
+
+// ---------------------------------------------- Modulle 4. Обработка событий
+var ESC_KEYCODE = 27;
+
+var uploadFile = document.querySelector('.img-upload__input');
+var uploadOverlay = document.querySelector('.img-upload__overlay');
+
+var uploadCancel = uploadOverlay.querySelector('.img-upload__cancel');
+var bigPictureClouse = bigPicture.querySelector('.big-picture__cancel');
+
+function onPopupEscPress(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    popupClose();
+  }
+}
+
+function popupOpen(popupName) {
+  popupName.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+}
+
+function popupClose(popupName) {
+  popupName.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+}
+
+// открытие окна редактирования загруженого фото
+uploadFile.onchange = function () {
+  popupOpen(uploadOverlay);
+
+  effectLevel.classList.add('hidden');
+};
+
+// закрытие окна ред. фото
+uploadCancel.addEventListener('click', function () {
+  popupClose(uploadOverlay);
+});
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    popupClose(uploadOverlay);
+  }
+});
+
+// закрытие большого фото
+bigPictureClouse.addEventListener('click', function () {
+  popupClose(bigPicture);
+});
+
+// закрытие большого фото с клавиатуры
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    popupClose(bigPicture);
+  }
+});
+
+
+// превью картинки
+var donwloadPhoto = uploadOverlay.querySelector('.img-upload__preview img');
+
+// применяемые стили
+var photoNormal = uploadOverlay.querySelector('.effects__preview--none');
+var photoChrome = uploadOverlay.querySelector('.effects__preview--chrome');
+var photoSepia = uploadOverlay.querySelector('.effects__preview--sepia');
+var photoMarvin = uploadOverlay.querySelector('.effects__preview--marvin');
+var photoPhobos = uploadOverlay.querySelector('.effects__preview--phobos');
+var photoHeat = uploadOverlay.querySelector('.effects__preview--heat');
+
+// Range управления насыщеностью эффекта
+var effectLevel = uploadOverlay.querySelector('.effect-level');
+// var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
+// var effectLevelLine = effectLevel.querySelector('.effect-level__line');
+// var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
+// var effectPinValue = document.querySelector('.effect-level__value');
+
+// функция удаления примененных стилей и скрытия ползунка при нормал
+function deleteEffects() {
+  donwloadPhoto.classList.remove('effects__preview--none');
+  donwloadPhoto.classList.remove('effects__preview--chrome');
+  donwloadPhoto.classList.remove('effects__preview--sepia');
+  donwloadPhoto.classList.remove('effects__preview--marvin');
+  donwloadPhoto.classList.remove('effects__preview--phobos');
+  donwloadPhoto.classList.remove('effects__preview--heat');
+  effectLevel.classList.remove('hidden');
+}
+
+photoNormal.addEventListener('click', function () {
+  deleteEffects();
+  effectLevel.classList.add('hidden');
+});
+
+photoChrome.addEventListener('click', function () {
+  deleteEffects();
+  donwloadPhoto.classList.add('effects__preview--chrome');
+});
+
+photoSepia.addEventListener('click', function () {
+  deleteEffects();
+  donwloadPhoto.classList.add('effects__preview--sepia');
+});
+
+photoMarvin.addEventListener('click', function () {
+  deleteEffects();
+  donwloadPhoto.classList.add('effects__preview--marvin');
+});
+
+photoPhobos.addEventListener('click', function () {
+  deleteEffects();
+  donwloadPhoto.classList.add('effects__preview--phobos');
+});
+
+photoHeat.addEventListener('click', function () {
+  deleteEffects();
+  donwloadPhoto.classList.add('effects__preview--heat');
+});
+
+// --------------------------------------------------------- Временное разделение блоков кода
+
+var pictures = document.querySelector('.pictures');
+var smallPictures = pictures.querySelectorAll('.picture');
+
+for (var i = 0; i < photosList.length; i++) {
+
+  smallPictures[i].dataset.id = i;
+}
+
+pictures.addEventListener('click', function (evt) {
+  var target = evt.target;
+
+  while (target !== pictures) {
+    if (target.tagName === 'A') {
+      bigPicture.classList.remove('hidden');
+      renderCard(photosList[number]);
+
+      return;
+    }
+    target = target.parentNode;
+    var number = target.dataset.id;
+  }
+});
+
+// расчет положения пина для уровня эффекта и функция расчета значения между max и min любого значения
+/*
+function levelValue(max, min, value) {
+  return (max - min) * (value / 100) / 1;
+}
+
+effectLevelLine.addEventListener('click', function (evt) {
+  var x = evt.offsetX;
+  effectLevelPin.style.left = Math.floor(x / 4.55) + '%';
+  effectLevelDepth.style.width = Math.floor(x / 4.55) + '%';
+  effectPinValue = Math.floor(x / 4.55);
+  effectPinValue.value = effectPinValue;
+});
+*/
