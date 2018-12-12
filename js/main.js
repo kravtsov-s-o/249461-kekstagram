@@ -77,8 +77,11 @@ var photosList = makePosts(QUANTITY_POSTS);
 var photoListElement = document.querySelector('.pictures');
 var templatePhotoSomeUser = document.querySelector('#picture').content;
 
-function renderPhoto(generatePhoto) {
+function renderPhoto(generatePhoto, number) {
   var photoElement = templatePhotoSomeUser.cloneNode(true);
+
+  var picture = photoElement.querySelector('.picture');
+  picture.dataset.id = number;
 
   photoElement.querySelector('.picture__img').src = generatePhoto.url;
   photoElement.querySelector('.picture__comments').textContent = generatePhoto.commentsCount;
@@ -89,7 +92,7 @@ function renderPhoto(generatePhoto) {
 
 var fragment = document.createDocumentFragment();
 for (var j = 0; j < photosList.length; j++) {
-  fragment.appendChild(renderPhoto(photosList[j]));
+  fragment.appendChild(renderPhoto(photosList[j], j));
 }
 
 photoListElement.appendChild(fragment);
@@ -228,29 +231,27 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-// закрытие большого фото
-bigPictureClouse.addEventListener('click', function () {
-  popupClose(bigPicture);
-});
-
-// закрытие большого фото с клавиатуры
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    popupClose(bigPicture);
-  }
-});
-
-
+// ------------------------------------------
 // превью картинки
-var donwloadPhoto = uploadOverlay.querySelector('.img-upload__preview img');
+var downloadPhoto = uploadOverlay.querySelector('.img-upload__preview img');
+var effectsList = document.querySelector('.effects__list');
 
-// применяемые стили
-var photoNormal = uploadOverlay.querySelector('.effects__preview--none');
-var photoChrome = uploadOverlay.querySelector('.effects__preview--chrome');
-var photoSepia = uploadOverlay.querySelector('.effects__preview--sepia');
-var photoMarvin = uploadOverlay.querySelector('.effects__preview--marvin');
-var photoPhobos = uploadOverlay.querySelector('.effects__preview--phobos');
-var photoHeat = uploadOverlay.querySelector('.effects__preview--heat');
+var effectValue;
+
+effectsList.addEventListener('click', function (e) {
+  var target = e.target;
+
+  if (target === 'LI') {
+    return;
+  }
+  target = target.parentNode;
+
+  var targetInput = target.querySelector('input');
+  downloadPhoto.classList.remove('effects__preview--' + effectValue);
+  effectValue = targetInput.value;
+  downloadPhoto.classList.add('effects__preview--' + effectValue);
+});
+// ------------------------------------------
 
 // Range управления насыщеностью эффекта
 var effectLevel = uploadOverlay.querySelector('.effect-level');
@@ -259,56 +260,9 @@ var effectLevel = uploadOverlay.querySelector('.effect-level');
 // var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
 // var effectPinValue = document.querySelector('.effect-level__value');
 
-// функция удаления примененных стилей и скрытия ползунка при нормал
-function deleteEffects() {
-  donwloadPhoto.classList.remove('effects__preview--none');
-  donwloadPhoto.classList.remove('effects__preview--chrome');
-  donwloadPhoto.classList.remove('effects__preview--sepia');
-  donwloadPhoto.classList.remove('effects__preview--marvin');
-  donwloadPhoto.classList.remove('effects__preview--phobos');
-  donwloadPhoto.classList.remove('effects__preview--heat');
-  effectLevel.classList.remove('hidden');
-}
-
-photoNormal.addEventListener('click', function () {
-  deleteEffects();
-  effectLevel.classList.add('hidden');
-});
-
-photoChrome.addEventListener('click', function () {
-  deleteEffects();
-  donwloadPhoto.classList.add('effects__preview--chrome');
-});
-
-photoSepia.addEventListener('click', function () {
-  deleteEffects();
-  donwloadPhoto.classList.add('effects__preview--sepia');
-});
-
-photoMarvin.addEventListener('click', function () {
-  deleteEffects();
-  donwloadPhoto.classList.add('effects__preview--marvin');
-});
-
-photoPhobos.addEventListener('click', function () {
-  deleteEffects();
-  donwloadPhoto.classList.add('effects__preview--phobos');
-});
-
-photoHeat.addEventListener('click', function () {
-  deleteEffects();
-  donwloadPhoto.classList.add('effects__preview--heat');
-});
-
 // --------------------------------------------------------- Временное разделение блоков кода
 
 var pictures = document.querySelector('.pictures');
-var smallPictures = pictures.querySelectorAll('.picture');
-
-for (var i = 0; i < photosList.length; i++) {
-
-  smallPictures[i].dataset.id = i;
-}
 
 pictures.addEventListener('click', function (evt) {
   var target = evt.target;
@@ -322,6 +276,18 @@ pictures.addEventListener('click', function (evt) {
     }
     target = target.parentNode;
     var number = target.dataset.id;
+  }
+});
+
+// закрытие большого фото
+bigPictureClouse.addEventListener('click', function () {
+  popupClose(bigPicture);
+});
+
+// закрытие большого фото с клавиатуры
+document.addEventListener('keydown', function (e) {
+  if (e.keyCode === ESC_KEYCODE) {
+    popupClose(bigPicture);
   }
 });
 
