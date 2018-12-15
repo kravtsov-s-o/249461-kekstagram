@@ -250,6 +250,7 @@ effectsList.addEventListener('change', function (e) {
   effectValue = targetInput.value;
   downloadPhoto.removeAttribute('style'); // удаляет ранее применный стиль с ползунка
   downloadPhoto.classList.add('effects__preview--' + effectValue);
+  scaleValue.value = '100%';
 
   if (effectValue === 'none') {
     effectLevel.classList.add('hidden');
@@ -265,8 +266,6 @@ effectsList.addEventListener('change', function (e) {
     effectLevelPin.style.left = clickOffset + '%';
     effectLevelDepth.style.width = clickOffset + '%';
     effectLevelValue.value = clickOffset;
-
-    // var effectSizen = effectCalc(1, 0, clickOffset);
 
     var effectFilter;
 
@@ -310,6 +309,8 @@ effectsList.addEventListener('change', function (e) {
         downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
       }
     */
+
+    
   });
 });
 
