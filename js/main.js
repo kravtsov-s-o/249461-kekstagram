@@ -183,9 +183,12 @@ function renderCard(photoNumber) {
 
   socialCommentCount.classList.add('hidden');
   commentsLoader.classList.add('hidden');
+
+  bigPictureClouse.addEventListener('click', closeBigPhotoPhoto);
+  document.addEventListener('keydown', closeBigPhotoPhotoEsc);
 }
 
-renderCard(photosList[0]);
+// renderCard(photosList[0]);
 
 
 // ---------------------------------------------- Modulle 4. Обработка событий
@@ -197,51 +200,47 @@ var uploadOverlay = document.querySelector('.img-upload__overlay');
 var uploadCancel = uploadOverlay.querySelector('.img-upload__cancel');
 var bigPictureClouse = bigPicture.querySelector('.big-picture__cancel');
 
-function onPopupEscPress(evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    popupClose();
-  }
-}
-
-function popupOpen(popupName) {
-  popupName.classList.remove('hidden');
-  document.addEventListener('keydown', onPopupEscPress);
-}
-
-function popupClose(popupName) {
-  popupName.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
-}
-
 // открытие окна редактирования загруженого фото
 uploadFile.onchange = function () {
-  popupOpen(uploadOverlay);
+  uploadOverlay.classList.remove('hidden');
+
+  uploadCancel.addEventListener('click', closeUploadPhoto);
+  document.addEventListener('keydown', closeUploadPhotoEsc);
 
   effectLevel.classList.add('hidden');
 };
 
-// закрытие окна ред. фото
-uploadCancel.addEventListener('click', function () {
-  popupClose(uploadOverlay);
-});
+// закрытие окна редактирования
+function closeUploadPhoto() {
+  uploadOverlay.classList.add('hidden');
+  uploadCancel.removeEventListener('click', closeUploadPhoto);
+  document.removeEventListener('keydown', closeUploadPhotoEsc);
+}
 
-document.addEventListener('keydown', function (evt) {
+function closeUploadPhotoEsc(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    popupClose(uploadOverlay);
+    closeUploadPhoto();
   }
-});
+}
 
 // ------------------------------------------
 // превью картинки
 var downloadPhoto = uploadOverlay.querySelector('.img-upload__preview img');
 var effectsList = document.querySelector('.effects__list');
 
+// переменные для работы с баром эффекта
+var effectLevel = uploadOverlay.querySelector('.effect-level');
+var effectLevelLine = effectLevel.querySelector('.effect-level__line');
+var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
+var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
+var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+
 var effectValue;
 
-effectsList.addEventListener('click', function (e) {
+effectsList.addEventListener('change', function (e) {
   var target = e.target;
 
-  if (target === 'LI') {
+  if (target === 'INPUT') {
     return;
   }
   target = target.parentNode;
@@ -249,19 +248,79 @@ effectsList.addEventListener('click', function (e) {
   var targetInput = target.querySelector('input');
   downloadPhoto.classList.remove('effects__preview--' + effectValue);
   effectValue = targetInput.value;
+  downloadPhoto.removeAttribute('style'); // удаляет ранее применный стиль с ползунка
   downloadPhoto.classList.add('effects__preview--' + effectValue);
+
+  if (effectValue === 'none') {
+    effectLevel.classList.add('hidden');
+  } else {
+    effectLevel.classList.remove('hidden');
+    effectLevelPin.style.left = '100%';
+    effectLevelDepth.style.width = '100%';
+  }
+
+  effectLevelLine.addEventListener('click', function (evt) {
+    var clickX = evt.offsetX;
+    var clickOffset = Math.floor(clickX / 4.55);
+    effectLevelPin.style.left = clickOffset + '%';
+    effectLevelDepth.style.width = clickOffset + '%';
+    effectLevelValue.value = clickOffset;
+
+    // var effectSizen = effectCalc(1, 0, clickOffset);
+
+    var effectFilter;
+
+    switch (true) {
+      case (effectValue === 'chrome'):
+        effectFilter = 'grayscale';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+        break;
+      case (effectValue === 'sepia'):
+        effectFilter = 'sepia';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+        break;
+      case (effectValue === 'marvin'):
+        effectFilter = 'invert';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+        break;
+      case (effectValue === 'phobos'):
+        effectFilter = 'blur';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+        break;
+      case (effectValue === 'heat'):
+        effectFilter = 'brightness';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
+        break;
+    }
+    /*
+      if (effectValue === 'chrome') {
+        effectFilter = 'grayscale';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+      } else if (effectValue === 'sepia') {
+        effectFilter = 'sepia';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+      } else if (effectValue === 'marvin') {
+        effectFilter = 'invert';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+      } else if (effectValue === 'phobos') {
+        effectFilter = 'blur';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+      } else {
+        effectFilter = 'brightness';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
+      }
+    */
+  });
 });
+
 // ------------------------------------------
 
-// Range управления насыщеностью эффекта
-var effectLevel = uploadOverlay.querySelector('.effect-level');
-// var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
-// var effectLevelLine = effectLevel.querySelector('.effect-level__line');
-// var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
-// var effectPinValue = document.querySelector('.effect-level__value');
+function effectCalc(max, min, value) {
+  return (max - min) * (value / 100); // value в процентах
+}
 
-// --------------------------------------------------------- Временное разделение блоков кода
 
+// ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
 var pictures = document.querySelector('.pictures');
 
 pictures.addEventListener('click', function (evt) {
@@ -280,28 +339,53 @@ pictures.addEventListener('click', function (evt) {
 });
 
 // закрытие большого фото
-bigPictureClouse.addEventListener('click', function () {
-  popupClose(bigPicture);
-});
-
-// закрытие большого фото с клавиатуры
-document.addEventListener('keydown', function (e) {
-  if (e.keyCode === ESC_KEYCODE) {
-    popupClose(bigPicture);
-  }
-});
-
-// расчет положения пина для уровня эффекта и функция расчета значения между max и min любого значения
-/*
-function levelValue(max, min, value) {
-  return (max - min) * (value / 100) / 1;
+function closeBigPhotoPhoto() {
+  bigPicture.classList.add('hidden');
+  bigPictureClouse.removeEventListener('click', closeBigPhotoPhoto);
+  document.removeEventListener('keydown', closeBigPhotoPhotoEsc);
 }
 
-effectLevelLine.addEventListener('click', function (evt) {
-  var x = evt.offsetX;
-  effectLevelPin.style.left = Math.floor(x / 4.55) + '%';
-  effectLevelDepth.style.width = Math.floor(x / 4.55) + '%';
-  effectPinValue = Math.floor(x / 4.55);
-  effectPinValue.value = effectPinValue;
-});
-*/
+function closeBigPhotoPhotoEsc(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeBigPhotoPhoto();
+  }
+}
+// ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
+
+// управление масштабом фотографии
+
+var scaleValue = document.querySelector('.scale__control--value');
+var buttonMin = document.querySelector('.scale__control--smaller');
+var buttonMax = document.querySelector('.scale__control--bigger');
+
+scaleValue.value = '100%';
+
+buttonMin.onclick = function () {
+  if (scaleValue.value === '100%') {
+    downloadPhoto.style.transform = 'scale(0.75)';
+    scaleValue.value = '75%';
+  } else if (scaleValue.value === '75%') {
+    downloadPhoto.style.transform = 'scale(0.5)';
+    scaleValue.value = '50%';
+  } else if (scaleValue.value === '50%') {
+    downloadPhoto.style.transform = 'scale(0.25)';
+    scaleValue.value = '25%';
+  }
+
+  return scaleValue;
+};
+
+buttonMax.onclick = function () {
+  if (scaleValue.value === '25%') {
+    downloadPhoto.style.transform = 'scale(0.5)';
+    scaleValue.value = '50%';
+  } else if (scaleValue.value === '50%') {
+    downloadPhoto.style.transform = 'scale(0.75)';
+    scaleValue.value = '75%';
+  } else if (scaleValue.value === '75%') {
+    downloadPhoto.style.transform = 'scale(1)';
+    scaleValue.value = '100%';
+  }
+
+  return scaleValue;
+};
