@@ -77,8 +77,11 @@ var photosList = makePosts(QUANTITY_POSTS);
 var photoListElement = document.querySelector('.pictures');
 var templatePhotoSomeUser = document.querySelector('#picture').content;
 
-function renderPhoto(generatePhoto) {
+function renderPhoto(generatePhoto, number) {
   var photoElement = templatePhotoSomeUser.cloneNode(true);
+
+  var picture = photoElement.querySelector('.picture');
+  picture.dataset.id = number;
 
   photoElement.querySelector('.picture__img').src = generatePhoto.url;
   photoElement.querySelector('.picture__comments').textContent = generatePhoto.commentsCount;
@@ -89,13 +92,12 @@ function renderPhoto(generatePhoto) {
 
 var fragment = document.createDocumentFragment();
 for (var j = 0; j < photosList.length; j++) {
-  fragment.appendChild(renderPhoto(photosList[j]));
+  fragment.appendChild(renderPhoto(photosList[j], j));
 }
 
 photoListElement.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
 
 var arrayElement = photosList[0];
 
@@ -181,6 +183,210 @@ function renderCard(photoNumber) {
 
   socialCommentCount.classList.add('hidden');
   commentsLoader.classList.add('hidden');
+
+  bigPictureClouse.addEventListener('click', closeBigPhotoPhoto);
+  document.addEventListener('keydown', closeBigPhotoPhotoEsc);
 }
 
-renderCard(photosList[0]);
+// renderCard(photosList[0]);
+
+
+// ---------------------------------------------- Modulle 4. Обработка событий
+var ESC_KEYCODE = 27;
+
+var uploadFile = document.querySelector('.img-upload__input');
+var uploadOverlay = document.querySelector('.img-upload__overlay');
+
+var uploadCancel = uploadOverlay.querySelector('.img-upload__cancel');
+var bigPictureClouse = bigPicture.querySelector('.big-picture__cancel');
+
+// открытие окна редактирования загруженого фото
+uploadFile.onchange = function () {
+  uploadOverlay.classList.remove('hidden');
+
+  uploadCancel.addEventListener('click', closeUploadPhoto);
+  document.addEventListener('keydown', closeUploadPhotoEsc);
+
+  effectLevel.classList.add('hidden');
+};
+
+// закрытие окна редактирования
+function closeUploadPhoto() {
+  uploadOverlay.classList.add('hidden');
+  uploadCancel.removeEventListener('click', closeUploadPhoto);
+  document.removeEventListener('keydown', closeUploadPhotoEsc);
+}
+
+function closeUploadPhotoEsc(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeUploadPhoto();
+  }
+}
+
+// ------------------------------------------
+// превью картинки
+var downloadPhoto = uploadOverlay.querySelector('.img-upload__preview img');
+var effectsList = document.querySelector('.effects__list');
+
+// переменные для работы с баром эффекта
+var effectLevel = uploadOverlay.querySelector('.effect-level');
+var effectLevelLine = effectLevel.querySelector('.effect-level__line');
+var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
+var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
+var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+
+var effectValue;
+
+effectsList.addEventListener('change', function (e) {
+  var target = e.target;
+
+  if (target === 'INPUT') {
+    return;
+  }
+  target = target.parentNode;
+
+  var targetInput = target.querySelector('input');
+  downloadPhoto.classList.remove('effects__preview--' + effectValue);
+  effectValue = targetInput.value;
+  downloadPhoto.removeAttribute('style'); // удаляет ранее применный стиль с ползунка
+  downloadPhoto.classList.add('effects__preview--' + effectValue);
+  scaleValue.value = '100%';
+
+  if (effectValue === 'none') {
+    effectLevel.classList.add('hidden');
+  } else {
+    effectLevel.classList.remove('hidden');
+    effectLevelPin.style.left = '100%';
+    effectLevelDepth.style.width = '100%';
+  }
+
+  effectLevelLine.addEventListener('click', function (evt) {
+    var clickX = evt.offsetX;
+    var clickOffset = Math.floor(clickX / 4.55);
+    effectLevelPin.style.left = clickOffset + '%';
+    effectLevelDepth.style.width = clickOffset + '%';
+    effectLevelValue.value = clickOffset;
+
+    var effectFilter;
+
+    switch (true) {
+      case (effectValue === 'chrome'):
+        effectFilter = 'grayscale';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+        break;
+      case (effectValue === 'sepia'):
+        effectFilter = 'sepia';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+        break;
+      case (effectValue === 'marvin'):
+        effectFilter = 'invert';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+        break;
+      case (effectValue === 'phobos'):
+        effectFilter = 'blur';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+        break;
+      case (effectValue === 'heat'):
+        effectFilter = 'brightness';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
+        break;
+    }
+    /*
+      if (effectValue === 'chrome') {
+        effectFilter = 'grayscale';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+      } else if (effectValue === 'sepia') {
+        effectFilter = 'sepia';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+      } else if (effectValue === 'marvin') {
+        effectFilter = 'invert';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+      } else if (effectValue === 'phobos') {
+        effectFilter = 'blur';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+      } else {
+        effectFilter = 'brightness';
+        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
+      }
+    */
+
+    
+  });
+});
+
+// ------------------------------------------
+
+function effectCalc(max, min, value) {
+  return (max - min) * (value / 100); // value в процентах
+}
+
+
+// ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
+var pictures = document.querySelector('.pictures');
+
+pictures.addEventListener('click', function (evt) {
+  var target = evt.target;
+
+  while (target !== pictures) {
+    if (target.tagName === 'A') {
+      bigPicture.classList.remove('hidden');
+      renderCard(photosList[number]);
+
+      return;
+    }
+    target = target.parentNode;
+    var number = target.dataset.id;
+  }
+});
+
+// закрытие большого фото
+function closeBigPhotoPhoto() {
+  bigPicture.classList.add('hidden');
+  bigPictureClouse.removeEventListener('click', closeBigPhotoPhoto);
+  document.removeEventListener('keydown', closeBigPhotoPhotoEsc);
+}
+
+function closeBigPhotoPhotoEsc(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeBigPhotoPhoto();
+  }
+}
+// ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
+
+// управление масштабом фотографии
+
+var scaleValue = document.querySelector('.scale__control--value');
+var buttonMin = document.querySelector('.scale__control--smaller');
+var buttonMax = document.querySelector('.scale__control--bigger');
+
+scaleValue.value = '100%';
+
+buttonMin.onclick = function () {
+  if (scaleValue.value === '100%') {
+    downloadPhoto.style.transform = 'scale(0.75)';
+    scaleValue.value = '75%';
+  } else if (scaleValue.value === '75%') {
+    downloadPhoto.style.transform = 'scale(0.5)';
+    scaleValue.value = '50%';
+  } else if (scaleValue.value === '50%') {
+    downloadPhoto.style.transform = 'scale(0.25)';
+    scaleValue.value = '25%';
+  }
+
+  return scaleValue;
+};
+
+buttonMax.onclick = function () {
+  if (scaleValue.value === '25%') {
+    downloadPhoto.style.transform = 'scale(0.5)';
+    scaleValue.value = '50%';
+  } else if (scaleValue.value === '50%') {
+    downloadPhoto.style.transform = 'scale(0.75)';
+    scaleValue.value = '75%';
+  } else if (scaleValue.value === '75%') {
+    downloadPhoto.style.transform = 'scale(1)';
+    scaleValue.value = '100%';
+  }
+
+  return scaleValue;
+};
