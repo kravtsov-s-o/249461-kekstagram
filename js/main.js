@@ -310,7 +310,7 @@ effectsList.addEventListener('change', function (e) {
       }
     */
 
-    
+
   });
 });
 
@@ -390,3 +390,56 @@ buttonMax.onclick = function () {
 
   return scaleValue;
 };
+
+// ------- ВАЛИДАЦИЯ ХЭШ-ТЕГОВ --------------
+
+var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
+
+var hashtags = uploadOverlay.querySelector('.text__hashtags');
+
+function checkOctothorpe(numberArray) {
+  if (numberArray !== '#') {
+    hashtags.setCustomValidity('ошибка хэштега');
+    console.log('хэштеги должны начинаться с #');
+  }
+  return;
+}
+
+function checkHashtagMaxLength(numberArray) {
+  if (numberArray.length > 20) {
+    hashtags.setCustomValidity('длина хэштега не может быть более 20 символов, включая #');
+    console.log('длина хэштега не может быть более 20 символов, включая #');
+  }
+  return;
+}
+
+function checkHashtagMinLength(numberArray) {
+  if (numberArray.length < 2) {
+    hashtags.setCustomValidity('хештег не может состоять только из #');
+    console.log('хештег не может состоять только из #');
+  }
+  return;
+}
+
+buttonPublish.addEventListener('click', function (evt) {
+  evt.preventDefault();
+
+  var hashtagsValue = hashtags.value.toLowerCase();
+  var hashtagsArray = hashtagsValue.split(' ');
+
+  if (hashtagsArray.length > 5) {
+    hashtags.setCustomValidity('Максимальное кол-во тегов не может быть больше 5');
+    console.log('Максимальное кол-во тегов не может быть больше 5');
+  } else {
+    var hashtagsArrayElement;
+
+    for (var i = 0; i < hashtagsArray.length; i++) {
+      hashtagsArrayElement = hashtagsArray[i].split('');
+
+      checkOctothorpe(hashtagsArrayElement[0]);
+      checkHashtagMaxLength(hashtagsArrayElement);
+      checkHashtagMinLength(hashtagsArrayElement);
+    }
+  }
+
+});
