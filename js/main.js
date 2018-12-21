@@ -269,48 +269,22 @@ effectsList.addEventListener('change', function (e) {
 
     var effectFilter;
 
-    switch (true) {
-      case (effectValue === 'chrome'):
-        effectFilter = 'grayscale';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-        break;
-      case (effectValue === 'sepia'):
-        effectFilter = 'sepia';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-        break;
-      case (effectValue === 'marvin'):
-        effectFilter = 'invert';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
-        break;
-      case (effectValue === 'phobos'):
-        effectFilter = 'blur';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
-        break;
-      case (effectValue === 'heat'):
-        effectFilter = 'brightness';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
-        break;
+    if (effectValue === 'chrome') {
+      effectFilter = 'grayscale';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+    } else if (effectValue === 'sepia') {
+      effectFilter = 'sepia';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+    } else if (effectValue === 'marvin') {
+      effectFilter = 'invert';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+    } else if (effectValue === 'phobos') {
+      effectFilter = 'blur';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+    } else {
+      effectFilter = 'brightness';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
     }
-    /*
-      if (effectValue === 'chrome') {
-        effectFilter = 'grayscale';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-      } else if (effectValue === 'sepia') {
-        effectFilter = 'sepia';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-      } else if (effectValue === 'marvin') {
-        effectFilter = 'invert';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
-      } else if (effectValue === 'phobos') {
-        effectFilter = 'blur';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
-      } else {
-        effectFilter = 'brightness';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
-      }
-    */
-
-
   });
 });
 
@@ -399,47 +373,46 @@ var hashtags = uploadOverlay.querySelector('.text__hashtags');
 
 function checkOctothorpe(numberArray) {
   if (numberArray !== '#') {
-    hashtags.setCustomValidity('ошибка хэштега');
-    console.log('хэштеги должны начинаться с #');
+    hashtags.setCustomValidity('хэштеги должны начинаться с #');
   }
-  return;
 }
 
 function checkHashtagMaxLength(numberArray) {
   if (numberArray.length > 20) {
     hashtags.setCustomValidity('длина хэштега не может быть более 20 символов, включая #');
-    console.log('длина хэштега не может быть более 20 символов, включая #');
   }
-  return;
 }
 
 function checkHashtagMinLength(numberArray) {
   if (numberArray.length < 2) {
     hashtags.setCustomValidity('хештег не может состоять только из #');
-    console.log('хештег не может состоять только из #');
   }
-  return;
 }
 
-buttonPublish.addEventListener('click', function (evt) {
-  evt.preventDefault();
-
+buttonPublish.addEventListener('click', function () {
   var hashtagsValue = hashtags.value.toLowerCase();
   var hashtagsArray = hashtagsValue.split(' ');
 
-  if (hashtagsArray.length > 5) {
-    hashtags.setCustomValidity('Максимальное кол-во тегов не может быть больше 5');
-    console.log('Максимальное кол-во тегов не может быть больше 5');
-  } else {
-    var hashtagsArrayElement;
+  var hashtagsObj = {};
 
-    for (var i = 0; i < hashtagsArray.length; i++) {
-      hashtagsArrayElement = hashtagsArray[i].split('');
-
-      checkOctothorpe(hashtagsArrayElement[0]);
-      checkHashtagMaxLength(hashtagsArrayElement);
-      checkHashtagMinLength(hashtagsArrayElement);
+  for (var repeat = 0; repeat < hashtagsArray.length; repeat++) {
+    var key = hashtagsArray[repeat];
+    if (hashtagsObj[key]) {
+      hashtags.setCustomValidity('Тэги не могут повторятся');
     }
+    hashtagsObj[key] = true;
   }
 
+  if (hashtagsArray.length > 5) {
+    hashtags.setCustomValidity('Максимальное кол-во тегов не может быть больше 5');
+  }
+  var hashtagsArrayElement;
+
+  for (var i = 0; i < hashtagsArray.length; i++) {
+    hashtagsArrayElement = hashtagsArray[i].split('');
+
+    checkOctothorpe(hashtagsArrayElement[0]);
+    checkHashtagMaxLength(hashtagsArrayElement);
+    checkHashtagMinLength(hashtagsArrayElement);
+  }
 });
