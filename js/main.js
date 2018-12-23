@@ -371,6 +371,7 @@ var formUploadPhoto = document.querySelector('.img-upload__form');
 // var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
 
 var hashtags = formUploadPhoto.querySelector('.text__hashtags');
+var uploadPhotoComment = formUploadPhoto.querySelector('.text__description');
 
 function checkOctothorpe(hashtagsArrayElement) {
   if (hashtagsArrayElement !== '#') {
@@ -410,31 +411,51 @@ function checkHashtagsRepeat(hashtagsArrayElement) {
 }
 
 formUploadPhoto.addEventListener('submit', function (evt) {
+  evt.preventDefault();
   var hashtagsValue = hashtags.value.toLowerCase();
   var hashtagsArray = hashtagsValue.split(' ');
-
   var hashtagsArrayElement;
+
+  if (checkHashtagsRepeat(hashtagsArray)) {
+    hashtags.setCustomValidity('Хэштеги не могут повторятся');
+    return;
+  } else if (hashtagsArray.length > 5) {
+    hashtags.setCustomValidity('Максимальное кол-во хэштегов не может быть больше 5');
+    return;
+  }
 
   for (var i = 0; i < hashtagsArray.length; i++) {
     hashtagsArrayElement = hashtagsArray[i].split('');
-    evt.preventDefault();
-    if (checkHashtagsRepeat(hashtagsArray)) {
-      hashtags.setCustomValidity('Хэштеги не могут повторятся');
-      return;
-    } else if (hashtagsArray.length > 5) {
-      hashtags.setCustomValidity('Максимальное кол-во хэштегов не может быть больше 5');
-      return;
-    } else if (checkOctothorpe(hashtagsArrayElement[0])) {
-      hashtags.setCustomValidity('хэштеги должны начинаться с #');
+
+    if (checkOctothorpe(hashtagsArrayElement[0])) {
+      hashtags.setCustomValidity('Хэштеги должны начинаться с #');
       return;
     } else if (checkHashtagMaxLength(hashtagsArrayElement)) {
-      hashtags.setCustomValidity('длина хэштега не может быть более 20 символов, включая #');
+      hashtags.setCustomValidity('Длина хэштега не может быть более 20 символов, включая #');
       return;
     } else if (checkHashtagMinLength(hashtagsArrayElement)) {
-      hashtags.setCustomValidity('хештег не может состоять только из #');
+      hashtags.setCustomValidity('Хэштег не может состоять только из #');
       return;
-    } else {
-      formUploadPhoto.submit();
     }
   }
+
+  hashtags.setCustomValidity('');
+  formUploadPhoto.submit();
 });
+
+// запрет закртыия окна на Esc при активных полях формы
+hashtags.onfocus = function () {
+  document.removeEventListener('keydown', closeUploadPhotoEsc);
+};
+
+hashtags.onblur = function () {
+  document.addEventListener('keydown', closeUploadPhotoEsc);
+};
+
+uploadPhotoComment.onfocus = function () {
+  document.removeEventListener('keydown', closeUploadPhotoEsc);
+};
+
+uploadPhotoComment.onblur = function () {
+  document.addEventListener('keydown', closeUploadPhotoEsc);
+};
