@@ -446,30 +446,47 @@ uploadPhotoComment.onblur = function () {
   document.addEventListener('keydown', closeUploadPhotoEsc);
 };
 
-effectLevelPin.addEventListener('mousedown', function (evt) {
+
+effectLevelLine.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var startCoordX = evt.offsetX;
+
+  var clickX = evt.offsetX;
 
   function onMouseMove(moveEvt) {
     moveEvt.preventDefault();
 
-    var shift = startCoordX - moveEvt.offsetX;
+    clickX = moveEvt.offsetX;
 
-    startCoordX = moveEvt.offsetX;
-
-    if (startCoordX - shift <= 0) {
-      effectLevelPin.style.left = 0 + '%';
-      effectLevelDepth.style.width = 0 + '%';
-    } else if (startCoordX - shift >= 100) {
-      effectLevelPin.style.left = 100 + '%';
-      effectLevelDepth.style.width = 100 + '%';
-      
+    if ((Math.floor(clickX / 4.55)) >= 100) {
+      var clickOffset = 100;
     } else {
-      effectLevelPin.style.left = (startCoordX - shift) + '%';
-      effectLevelDepth.style.width = (startCoordX - shift) + '%';
+      clickOffset = Math.floor(clickX / 4.55);
     }
-    console.log(effectLevelPin.style.left);
+
+    effectLevelPin.style.left = clickOffset + '%';
+    effectLevelDepth.style.width = clickOffset + '%';
+    effectLevelValue.value = clickOffset;
+
+    var effectFilter;
+
+    if (effectValue === 'chrome') {
+      effectFilter = 'grayscale';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+    } else if (effectValue === 'sepia') {
+      effectFilter = 'sepia';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+    } else if (effectValue === 'marvin') {
+      effectFilter = 'invert';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+    } else if (effectValue === 'phobos') {
+      effectFilter = 'blur';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+    } else {
+      effectFilter = 'brightness';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
+    }
   }
+
   function onMouseUp(upEvt) {
     upEvt.preventDefault();
 
