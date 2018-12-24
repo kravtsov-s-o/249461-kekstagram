@@ -368,33 +368,21 @@ buttonMax.onclick = function () {
 // ------- ВАЛИДАЦИЯ ХЭШ-ТЕГОВ --------------
 
 var formUploadPhoto = document.querySelector('.img-upload__form');
-// var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
+var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
 
 var hashtags = formUploadPhoto.querySelector('.text__hashtags');
 var uploadPhotoComment = formUploadPhoto.querySelector('.text__description');
 
 function checkOctothorpe(hashtagsArrayElement) {
-  if (hashtagsArrayElement !== '#') {
-    return true;
-  } else {
-    return false;
-  }
+  return hashtagsArrayElement !== '#' ? true : false;
 }
 
 function checkHashtagMaxLength(hashtagsArrayElement) {
-  if (hashtagsArrayElement.length > 20) {
-    return true;
-  } else {
-    return false;
-  }
+  return hashtagsArrayElement.length > 20 ? true : false;
 }
 
 function checkHashtagMinLength(hashtagsArrayElement) {
-  if (hashtagsArrayElement.length < 2) {
-    return true;
-  } else {
-    return false;
-  }
+  return hashtagsArrayElement.length < 2 ? true : false;
 }
 
 function checkHashtagsRepeat(hashtagsArrayElement) {
@@ -410,8 +398,7 @@ function checkHashtagsRepeat(hashtagsArrayElement) {
   return false;
 }
 
-formUploadPhoto.addEventListener('submit', function (evt) {
-  evt.preventDefault();
+buttonPublish.addEventListener('click', function () {
   var hashtagsValue = hashtags.value.toLowerCase();
   var hashtagsArray = hashtagsValue.split(' ');
   var hashtagsArrayElement;
@@ -440,7 +427,6 @@ formUploadPhoto.addEventListener('submit', function (evt) {
   }
 
   hashtags.setCustomValidity('');
-  formUploadPhoto.submit();
 });
 
 // запрет закртыия окна на Esc при активных полях формы
