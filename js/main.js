@@ -269,48 +269,22 @@ effectsList.addEventListener('change', function (e) {
 
     var effectFilter;
 
-    switch (true) {
-      case (effectValue === 'chrome'):
-        effectFilter = 'grayscale';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-        break;
-      case (effectValue === 'sepia'):
-        effectFilter = 'sepia';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-        break;
-      case (effectValue === 'marvin'):
-        effectFilter = 'invert';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
-        break;
-      case (effectValue === 'phobos'):
-        effectFilter = 'blur';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
-        break;
-      case (effectValue === 'heat'):
-        effectFilter = 'brightness';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
-        break;
+    if (effectValue === 'chrome') {
+      effectFilter = 'grayscale';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+    } else if (effectValue === 'sepia') {
+      effectFilter = 'sepia';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
+    } else if (effectValue === 'marvin') {
+      effectFilter = 'invert';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
+    } else if (effectValue === 'phobos') {
+      effectFilter = 'blur';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
+    } else {
+      effectFilter = 'brightness';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
     }
-    /*
-      if (effectValue === 'chrome') {
-        effectFilter = 'grayscale';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-      } else if (effectValue === 'sepia') {
-        effectFilter = 'sepia';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, clickOffset) + ')';
-      } else if (effectValue === 'marvin') {
-        effectFilter = 'invert';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, clickOffset) + '%)';
-      } else if (effectValue === 'phobos') {
-        effectFilter = 'blur';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, clickOffset) + 'px)';
-      } else {
-        effectFilter = 'brightness';
-        downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, clickOffset) + ')';
-      }
-    */
-
-    
   });
 });
 
@@ -389,4 +363,85 @@ buttonMax.onclick = function () {
   }
 
   return scaleValue;
+};
+
+// ------- ВАЛИДАЦИЯ ХЭШ-ТЕГОВ --------------
+
+var formUploadPhoto = document.querySelector('.img-upload__form');
+var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
+
+var hashtags = formUploadPhoto.querySelector('.text__hashtags');
+var uploadPhotoComment = formUploadPhoto.querySelector('.text__description');
+
+function checkOctothorpe(hashtagsArrayElement) {
+  return hashtagsArrayElement !== '#' ? true : false;
+}
+
+function checkHashtagMaxLength(hashtagsArrayElement) {
+  return hashtagsArrayElement.length > 20 ? true : false;
+}
+
+function checkHashtagMinLength(hashtagsArrayElement) {
+  return hashtagsArrayElement.length < 2 ? true : false;
+}
+
+function checkHashtagsRepeat(hashtagsArrayElement) {
+  var hashtagsObj = {};
+
+  for (var repeat = 0; repeat < hashtagsArrayElement.length; repeat++) {
+    var key = hashtagsArrayElement[repeat];
+    if (hashtagsObj[key]) {
+      return true;
+    }
+    hashtagsObj[key] = true;
+  }
+  return false;
+}
+
+buttonPublish.addEventListener('click', function () {
+  var hashtagsValue = hashtags.value.toLowerCase();
+  var hashtagsArray = hashtagsValue.split(' ');
+  var hashtagsArrayElement;
+
+  if (checkHashtagsRepeat(hashtagsArray)) {
+    hashtags.setCustomValidity('Хэштеги не могут повторятся');
+    return;
+  } else if (hashtagsArray.length > 5) {
+    hashtags.setCustomValidity('Максимальное кол-во хэштегов не может быть больше 5');
+    return;
+  }
+
+  for (var i = 0; i < hashtagsArray.length; i++) {
+    hashtagsArrayElement = hashtagsArray[i].split('');
+
+    if (checkOctothorpe(hashtagsArrayElement[0])) {
+      hashtags.setCustomValidity('Хэштеги должны начинаться с #');
+      return;
+    } else if (checkHashtagMaxLength(hashtagsArrayElement)) {
+      hashtags.setCustomValidity('Длина хэштега не может быть более 20 символов, включая #');
+      return;
+    } else if (checkHashtagMinLength(hashtagsArrayElement)) {
+      hashtags.setCustomValidity('Хэштег не может состоять только из #');
+      return;
+    }
+  }
+
+  hashtags.setCustomValidity('');
+});
+
+// запрет закртыия окна на Esc при активных полях формы
+hashtags.onfocus = function () {
+  document.removeEventListener('keydown', closeUploadPhotoEsc);
+};
+
+hashtags.onblur = function () {
+  document.addEventListener('keydown', closeUploadPhotoEsc);
+};
+
+uploadPhotoComment.onfocus = function () {
+  document.removeEventListener('keydown', closeUploadPhotoEsc);
+};
+
+uploadPhotoComment.onblur = function () {
+  document.addEventListener('keydown', closeUploadPhotoEsc);
 };
