@@ -445,3 +445,38 @@ uploadPhotoComment.onfocus = function () {
 uploadPhotoComment.onblur = function () {
   document.addEventListener('keydown', closeUploadPhotoEsc);
 };
+
+effectLevelPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoordX = evt.offsetX;
+
+  function onMouseMove(moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoordX - moveEvt.offsetX;
+
+    startCoordX = moveEvt.offsetX;
+
+    if (startCoordX - shift <= 0) {
+      effectLevelPin.style.left = 0 + '%';
+      effectLevelDepth.style.width = 0 + '%';
+    } else if (startCoordX - shift >= 100) {
+      effectLevelPin.style.left = 100 + '%';
+      effectLevelDepth.style.width = 100 + '%';
+      
+    } else {
+      effectLevelPin.style.left = (startCoordX - shift) + '%';
+      effectLevelDepth.style.width = (startCoordX - shift) + '%';
+    }
+    console.log(effectLevelPin.style.left);
+  }
+  function onMouseUp(upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
