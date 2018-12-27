@@ -47,6 +47,10 @@
 
   var effectValue;
 
+  function effectCalc(max, min, value) {
+    return (max - min) * (value / window.gallery.MAX_SLIDER_VALUE);
+  }
+
   function effectWithSomeLevel(someLevel) {
     effectLevelPin.style.left = someLevel + '%';
     effectLevelDepth.style.width = someLevel + '%';
@@ -85,7 +89,7 @@
     effectValue = targetInput.value;
     downloadPhoto.removeAttribute('style'); // удаляет ранее применный стиль с ползунка
     downloadPhoto.classList.add('effects__preview--' + effectValue);
-    scaleValue.value = '100%';
+    window.scaleValue.value = '100%';
 
     if (effectValue === 'none') {
       effectLevel.classList.add('hidden');
@@ -101,50 +105,6 @@
       effectWithSomeLevel(clickOffset);
     });
   });
-
-  // ------------------------------------------
-
-  function effectCalc(max, min, value) {
-    return (max - min) * (value / window.gallery.MAX_SLIDER_VALUE); // value в процентах
-  }
-
-  // управление масштабом фотографии
-
-  var scaleValue = document.querySelector('.scale__control--value');
-  var buttonMin = document.querySelector('.scale__control--smaller');
-  var buttonMax = document.querySelector('.scale__control--bigger');
-
-  scaleValue.value = '100%';
-
-  buttonMin.onclick = function () {
-    if (scaleValue.value === '100%') {
-      downloadPhoto.style.transform = 'scale(0.75)';
-      scaleValue.value = '75%';
-    } else if (scaleValue.value === '75%') {
-      downloadPhoto.style.transform = 'scale(0.5)';
-      scaleValue.value = '50%';
-    } else if (scaleValue.value === '50%') {
-      downloadPhoto.style.transform = 'scale(0.25)';
-      scaleValue.value = '25%';
-    }
-
-    return scaleValue;
-  };
-
-  buttonMax.onclick = function () {
-    if (scaleValue.value === '25%') {
-      downloadPhoto.style.transform = 'scale(0.5)';
-      scaleValue.value = '50%';
-    } else if (scaleValue.value === '50%') {
-      downloadPhoto.style.transform = 'scale(0.75)';
-      scaleValue.value = '75%';
-    } else if (scaleValue.value === '75%') {
-      downloadPhoto.style.transform = 'scale(1)';
-      scaleValue.value = '100%';
-    }
-
-    return scaleValue;
-  };
 
   // ------- ВАЛИДАЦИЯ ХЭШ-ТЕГОВ --------------
 
@@ -229,45 +189,13 @@
     document.addEventListener('keydown', closeUploadPhotoEsc);
   };
 
-  function getCoords(elem) {
-    var box = elem.getBoundingClientRect();
-
-    return {
-      top: box.top + pageYOffset,
-      left: box.left + pageXOffset
-    };
-
-  }
-
-  effectLevelPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    var sliderCoords = getCoords(effectLevel);
-
-    function onMouseMove(moveEvt) {
-      moveEvt.preventDefault();
-
-      var clickOffset = (moveEvt.pageX - sliderCoords.left) / (effectLevelLine.offsetWidth / window.gallery.MAX_SLIDER_VALUE);
-
-      if (clickOffset < 0) {
-        clickOffset = 0;
-      } else if (clickOffset > window.gallery.MAX_SLIDER_VALUE) {
-        clickOffset = window.gallery.MAX_SLIDER_VALUE;
-      }
-
-      effectWithSomeLevel(clickOffset);
-    }
-
-    function onMouseUp(upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
-
-  window.bigPictureClouse = bigPictureClouse;
+  window.form = {
+    ESC_KEYCODE: ESC_KEYCODE,
+    bigPictureClouse: bigPictureClouse,
+    downloadPhoto: downloadPhoto,
+    effectLevel: effectLevel,
+    effectLevelPin: effectLevelPin,
+    effectLevelLine: effectLevelLine,
+    effectWithSomeLevel: effectWithSomeLevel
+  };
 })();
