@@ -139,39 +139,6 @@
     return false;
   }
 
-  buttonPublish.addEventListener('click', function () {
-    if (hashtags.value) {
-      var hashtagsValue = hashtags.value.toLowerCase();
-      var hashtagsArray = hashtagsValue.split(' ');
-      var hashtagsArrayElement;
-
-      if (checkHashtagsRepeat(hashtagsArray)) {
-        hashtags.setCustomValidity('Хэштеги не могут повторятся');
-        return;
-      } else if (hashtagsArray.length > 5) {
-        hashtags.setCustomValidity('Максимальное кол-во хэштегов не может быть больше 5');
-        return;
-      }
-
-      for (var i = 0; i < hashtagsArray.length; i++) {
-        hashtagsArrayElement = hashtagsArray[i].split('');
-
-        if (checkOctothorpe(hashtagsArrayElement[0])) {
-          hashtags.setCustomValidity('Хэштеги должны начинаться с #');
-          return;
-        } else if (checkHashtagMaxLength(hashtagsArrayElement)) {
-          hashtags.setCustomValidity('Длина хэштега не может быть более 20 символов, включая #');
-          return;
-        } else if (checkHashtagMinLength(hashtagsArrayElement)) {
-          hashtags.setCustomValidity('Хэштег не может состоять только из #');
-          return;
-        }
-      }
-
-      hashtags.setCustomValidity('');
-    }
-  });
-
   // запрет закртыия окна на Esc при активных полях формы
   hashtags.onfocus = function () {
     document.removeEventListener('keydown', closeUploadPhotoEsc);
@@ -196,6 +163,12 @@
     effectLevel: effectLevel,
     effectLevelPin: effectLevelPin,
     effectLevelLine: effectLevelLine,
-    effectWithSomeLevel: effectWithSomeLevel
+    effectWithSomeLevel: effectWithSomeLevel,
+    buttonPublish: buttonPublish,
+    checkOctothorpe: checkOctothorpe,
+    checkHashtagMaxLength: checkHashtagMaxLength,
+    checkHashtagMinLength: checkHashtagMinLength,
+    checkHashtagsRepeat: checkHashtagsRepeat,
+    hashtags: hashtags
   };
 })();
