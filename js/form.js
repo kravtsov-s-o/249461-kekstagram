@@ -156,6 +156,15 @@
     document.addEventListener('keydown', closeUploadPhotoEsc);
   };
 
+  // ------------------------------------------------------------------------------------------------
+  formUploadPhoto.addEventListener('submit', function (evt) {
+    window.upload(new FormData(formUploadPhoto), function (response) {
+      uploadOverlay.classList.add('hidden');
+    });
+    evt.preventDefault();
+  });
+  // ------------------------------------------------------------------------------------------------
+
   window.form = {
     ESC_KEYCODE: ESC_KEYCODE,
     bigPictureClouse: bigPictureClouse,

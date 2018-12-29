@@ -67,18 +67,25 @@
     return photoElement;
   }
 
+  window.onload(function (photos) {
+    // создание фрагмента с постами передвставкой на страницу
+    var fragment = document.createDocumentFragment();
+    for (var j = 0; j < photos.length; j++) {
+      fragment.appendChild(renderPhoto(photos[j], j));
+    }
+
+    // вставка фрагмента с постами на страницу
+    photoListElement.appendChild(fragment);
+  });
+
   // создание фрагмента с постами передвставкой на страницу
-  var fragment = document.createDocumentFragment();
-  for (var j = 0; j < photosList.length; j++) {
-    fragment.appendChild(renderPhoto(photosList[j], j));
-  }
+  // var fragment = document.createDocumentFragment();
+  // for (var j = 0; j < photosList.length; j++) {
+  //   fragment.appendChild(renderPhoto(photosList[j], j));
+  // }
 
   // вставка фрагмента с постами на страницу
-  photoListElement.appendChild(fragment);
-
-  // window.AVATAR_SIZE = AVATAR_SIZE;
-  // window.MAX_SLIDER_VALUE = MAX_SLIDER_VALUE;
-  // window.photosList = photosList;
+  // photoListElement.appendChild(fragment);
 
   window.gallery = {
     AVATAR_SIZE: AVATAR_SIZE,
