@@ -67,7 +67,7 @@
     return photoElement;
   }
 
-  window.onload(function (photos) {
+  window.loadData(function (photos) {
     // создание фрагмента с постами передвставкой на страницу
     var fragment = document.createDocumentFragment();
     for (var j = 0; j < photos.length; j++) {

@@ -20,7 +20,7 @@
   // отправка формы на сервер
 
   // загрузка данных с сервера
-  window.onload = function (onLoad, onError) {
+  window.loadData = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
