@@ -4,8 +4,6 @@
   // отрисовка большого фото
   var bigPicture = document.querySelector('.big-picture');
 
-  var arrayElement = window.gallery.photosList[0];
-
   // рендер большого фото
   function renderBigPhoto(photoNumber) {
     var photo = bigPicture.querySelector('.big-picture__preview');
@@ -54,17 +52,17 @@
 
   // функиця генерации списка комментариев к большому фото
   function renderCommentsList(photosNumber) {
-    var commentsList = [];
+    var comments = [];
 
-    for (var i = 0; i < photosNumber.commentsCount; i++) {
+    for (var i = 0; i < photosNumber.comments.length; i++) {
       var customComment = renderComment(photosNumber, i);
-      commentsList.push(customComment);
+      comments.push(customComment);
     }
 
-    return commentsList;
+    return comments;
   }
 
-  var commentsList = renderCommentsList(arrayElement); // массив комментариев
+  var commentsList = []; // массив комментариев
 
   // создание фрагмента с комментариями
   function addCommentsList(addedСomments) {
@@ -97,8 +95,6 @@
     document.addEventListener('keydown', closeBigPhotoPhotoEsc);
   }
 
-  // renderCard(photosList[0]);
-
   // ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
   var pictures = document.querySelector('.pictures');
 
@@ -108,7 +104,8 @@
     while (target !== pictures) {
       if (target.tagName === 'A') {
         bigPicture.classList.remove('hidden');
-        renderCard(window.gallery.photosList[number]);
+        commentsList = renderCommentsList(window.photosList[number]);
+        renderCard(window.photosList[number]);
 
         return;
       }

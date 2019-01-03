@@ -156,13 +156,41 @@
     document.addEventListener('keydown', closeUploadPhotoEsc);
   };
 
+  var messageSuccess = document.querySelector('#success').content;
+  var successButton = messageSuccess.querySelector('.success__button');
+  var main = document.querySelector('main');
+
   // ------------------------------------------------------------------------------------------------
   formUploadPhoto.addEventListener('submit', function (evt) {
-    window.upload(new FormData(formUploadPhoto), function (response) {
+    window.upload(new FormData(formUploadPhoto), function () {
       uploadOverlay.classList.add('hidden');
+      openSuccessMessage();
     });
+
     evt.preventDefault();
   });
+  // ------------------------------------------------------------------------------------------------
+
+  // открытие окна успешной загрузки
+  function openSuccessMessage() {
+    main.appendChild(messageSuccess);
+    successButton.addEventListener('click', closeMessageSuccess);
+    document.addEventListener('keydown', closeMessageSuccessEsc);
+  }
+
+  // закрытие окна успешной загрузки
+  function closeMessageSuccess() {
+    var successUpload = main.querySelector('.success');
+    successUpload.remove();
+    successButton.removeEventListener('click', closeMessageSuccess);
+    document.removeEventListener('keydown', closeMessageSuccessEsc);
+  }
+
+  function closeMessageSuccessEsc(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeMessageSuccess();
+    }
+  }
   // ------------------------------------------------------------------------------------------------
 
   window.form = {
