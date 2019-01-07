@@ -165,12 +165,15 @@
     window.upload(new FormData(formUploadPhoto), function () {
       uploadOverlay.classList.add('hidden');
       openSuccessMessage();
+    }, function () {
+      uploadOverlay.classList.add('hidden');
+      openErrorMessage();
     });
 
     evt.preventDefault();
   });
   // ------------------------------------------------------------------------------------------------
-
+  // ОКНО УСПЕШНОЙ ЗАГРУЗКИ ФОТО
   // открытие окна успешной загрузки
   function openSuccessMessage() {
     main.appendChild(messageSuccess);
@@ -189,6 +192,35 @@
   function closeMessageSuccessEsc(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeMessageSuccess();
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------------
+  // ОКНО ОШИБКИ ЗАГРУЗКИ ФОТО
+  var errorMessage = document.querySelector('#error').content;
+  var buttonTryAgain = errorMessage.querySelector('.error__button:nth-child(1)');
+  var buttonOtherFile = errorMessage.querySelector('.error__button:nth-child(2)');
+
+
+  function openErrorMessage() {
+    main.appendChild(errorMessage);
+    buttonTryAgain.addEventListener('click', closeErrorMessage);
+    buttonOtherFile.addEventListener('click', closeErrorMessage);
+    document.addEventListener('keydown', closeErrorMessageEsc);
+  }
+
+  // закрытие окна ошибки загрузки
+  function closeErrorMessage() {
+    var errorUpload = main.querySelector('.error');
+    errorUpload.remove();
+    buttonTryAgain.removeEventListener('click', closeErrorMessage);
+    buttonOtherFile.removeEventListener('click', closeErrorMessage);
+    document.removeEventListener('keydown', closeErrorMessageEsc);
+  }
+
+  function closeErrorMessageEsc(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeErrorMessage();
     }
   }
   // ------------------------------------------------------------------------------------------------

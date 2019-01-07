@@ -14,9 +14,10 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Ошибка загрузки файла');
       }
     });
+
 
     xhr.open('POST', URL_UPLOAD);
     xhr.send(data);
