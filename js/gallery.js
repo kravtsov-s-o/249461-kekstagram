@@ -33,6 +33,17 @@
     photoListElement.appendChild(fragment);
 
     window.photosList = photos;
+  }, function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 100px auto; text-align: center; min-height: 45px; background-color: #3c3614;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '40px';
+    node.style.lineHeight = '40px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
   });
 
   window.gallery = {
