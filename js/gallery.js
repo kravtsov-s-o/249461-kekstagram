@@ -23,7 +23,7 @@
   }
 
   window.loadData(function (photos) {
-    // создание фрагмента с постами передвставкой на страницу
+    // создание фрагмента с постами перед вставкой на страницу
     var fragment = document.createDocumentFragment();
     for (var j = 0; j < photos.length; j++) {
       fragment.appendChild(renderPhoto(photos[j], j));
@@ -45,6 +45,85 @@
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
   });
+
+  // ФИЛЬТР ЗАГРУЖЕННЫХ ПОСТОВ ------------------------------
+
+  var uploadForm = document.querySelector('.img-upload');
+
+  var imgFilters = document.querySelector('.img-filters');
+  imgFilters.classList.remove('img-filters--inactive');
+
+  var btnPopular = imgFilters.querySelector('#filter-popular');
+  var btnNew = imgFilters.querySelector('#filter-new');
+  var btnDiscussed = imgFilters.querySelector('#filter-discussed');
+
+  imgFilters.addEventListener('click', function (evt) {
+    var target = evt.target;
+
+    var testArrayList = window.photosList;
+    // var fragment = document.createDocumentFragment();
+    // var j;
+
+    function createPosts(arrayName) {
+      photoListElement.innerHTML = '';
+      // создание фрагмента с постами перед вставкой на страницу
+      var fragment = document.createDocumentFragment();
+      for (var j = 0; j < arrayName.length; j++) {
+        fragment.appendChild(renderPhoto(arrayName[j], j));
+      }
+
+      // вставка фрагмента с постами на страницу
+      photoListElement.appendChild(uploadForm);
+      photoListElement.appendChild(fragment);
+    }
+
+    if (target === 'BUTTON') {
+      return;
+    }
+
+    if (target === btnPopular) {
+      btnPopular.classList.add('img-filters__button--active');
+      btnNew.classList.remove('img-filters__button--active');
+      btnDiscussed.classList.remove('img-filters__button--active');
+
+      createPosts(testArrayList);
+
+    } else if (target === btnNew) {
+      btnPopular.classList.remove('img-filters__button--active');
+      btnNew.classList.add('img-filters__button--active');
+      btnDiscussed.classList.remove('img-filters__button--active');
+
+      var testArrayListTwo = testArrayList
+      .slice(0)
+      .sort(function () {
+        return 0.5 - Math.random();
+      })
+      .slice(0, 10);
+
+      createPosts(testArrayListTwo);
+
+    } else if (target === btnDiscussed) {
+      btnPopular.classList.remove('img-filters__button--active');
+      btnNew.classList.remove('img-filters__button--active');
+      btnDiscussed.classList.add('img-filters__button--active');
+
+      // console.log('третья');
+
+      var testArrayListThree = testArrayList.slice(0).sort(function (first, second) {
+        if (first.comments.length > second.comments.length) {
+          return -1;
+        } else if (first.comments.length < second.comments.length) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      createPosts(testArrayListThree);
+    }
+  });
+
+  // ФИЛЬТР ЗАГРУЖЕННЫХ ПОСТОВ ------------------------------
 
   window.gallery = {
     AVATAR_SIZE: AVATAR_SIZE,
