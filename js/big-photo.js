@@ -123,11 +123,12 @@
   var pictures = document.querySelector('.pictures');
 
   pictures.addEventListener('click', function (evt) {
-    evt.preventDefault();
+    // evt.preventDefault();
     var target = evt.target;
 
     while (target !== pictures) {
       if (target.tagName === 'A') {
+        evt.preventDefault();
         bigPicture.classList.remove('hidden');
         commentsList = renderCommentsList(window.customPhotosList[number]);
         renderCard(window.customPhotosList[number]);

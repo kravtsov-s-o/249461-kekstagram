@@ -36,6 +36,7 @@
     photoListElement.appendChild(fragment);
 
     window.photosList = photos;
+    window.customPhotosList = photos;
   }, function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 100px auto; text-align: center; min-height: 45px; background-color: #3c3614;';
