@@ -96,15 +96,20 @@
     var visibleComments = START_NUMBERS_OF_COMMENTS;
     var someCommentsListTwo = someCommentsList.slice(0, visibleComments); // вырезаем часть показанную по умолчанию
 
+    var visibleCommentsCount = socialCommentCount.querySelector('span');
+    visibleCommentsCount.textContent = someCommentsListTwo.length;
+
     function moreVisibleComments() {
       visibleComments += COMMENTS_STEP;
       someCommentsListTwo = someCommentsList.slice(0, visibleComments);
+      visibleCommentsCount.textContent = someCommentsListTwo.length;
       return someCommentsListTwo;
     }
 
     commentsLoader.addEventListener('click', function () {
-      moreVisibleComments();
-      socialComments.appendChild(addCommentsList(someCommentsListTwo));
+      socialComments.innerHTML = '';
+      socialComments.appendChild(addCommentsList(moreVisibleComments()));
+
     });
     // ------------------------------------------------- попытка разделить комменты
 
@@ -124,8 +129,8 @@
     while (target !== pictures) {
       if (target.tagName === 'A') {
         bigPicture.classList.remove('hidden');
-        commentsList = renderCommentsList(window.photosList[number]);
-        renderCard(window.photosList[number]);
+        commentsList = renderCommentsList(window.customPhotosList[number]);
+        renderCard(window.customPhotosList[number]);
 
         return;
       }

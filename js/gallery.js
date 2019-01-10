@@ -66,6 +66,7 @@
     var target = evt.target;
 
     var popularArray = window.photosList.slice(0);
+    var customPhotosList = popularArray;
 
     function createPosts(arrayName) {
       photoListElement.innerHTML = '';
@@ -87,6 +88,7 @@
       })
       .slice(FIRST_NUMBER_ARRAY, AMOUNT_PHOTOS);
 
+      customPhotosList = randomNewArray;
       return randomNewArray;
     }
 
@@ -101,6 +103,7 @@
         }
       });
 
+      customPhotosList = discussedArray;
       return discussedArray;
     }
 
@@ -131,6 +134,8 @@
 
       createPosts(getDiscussedArray(popularArray));
     }
+
+    window.customPhotosList = customPhotosList;
   });
 
   // ФИЛЬТР ЗАГРУЖЕННЫХ ПОСТОВ ------------------------------
