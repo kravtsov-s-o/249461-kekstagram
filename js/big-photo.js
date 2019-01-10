@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var START_NUMBERS_OF_COMMENTS = 5;
+  var COMMENTS_STEP = 5;
   // отрисовка большого фото
   var bigPicture = document.querySelector('.big-picture');
 
@@ -11,7 +13,7 @@
     photo.querySelector('.big-picture__img img').src = photoNumber.url;
     photo.querySelector('.big-picture__social .social__caption').textContent = photoNumber.description;
     photo.querySelector('.big-picture__social .likes-count').textContent = photoNumber.likes;
-    photo.querySelector('.comments-count').textContent = photoNumber.commentsCount;
+    photo.querySelector('.comments-count').textContent = photoNumber.comments.length;
 
     renderCommentsList(photoNumber);
 
@@ -68,7 +70,7 @@
   function addCommentsList(addedСomments) {
     var fragmentComments = document.createDocumentFragment();
 
-    for (var i = 0; i < commentsList.length; i++) {
+    for (var i = 0; i < addedСomments.length; i++) {
       fragmentComments.appendChild(addedСomments[i]);
     }
 
@@ -82,14 +84,31 @@
     var socialComments = bigPhoto.querySelector('.social__comments');
     socialComments.innerHTML = '';
 
-    socialComments.appendChild(addCommentsList(commentsList));
-
     // Скрытие кол-ва комментариев и загрузки дополнительных
     var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
     var commentsLoader = bigPhoto.querySelector('.comments-loader');
 
-    socialCommentCount.classList.add('hidden');
-    commentsLoader.classList.add('hidden');
+    // socialCommentCount.classList.add('hidden');
+    // commentsLoader.classList.add('hidden');
+
+    // ------------------------------------------------- попытка разделить комменты
+    var someCommentsList = commentsList.slice(0); // копируем массив с комментариями
+    var visibleComments = START_NUMBERS_OF_COMMENTS;
+    var someCommentsListTwo = someCommentsList.slice(0, visibleComments); // вырезаем часть показанную по умолчанию
+
+    function moreVisibleComments() {
+      visibleComments += COMMENTS_STEP;
+      someCommentsListTwo = someCommentsList.slice(0, visibleComments);
+      return someCommentsListTwo;
+    }
+
+    commentsLoader.addEventListener('click', function () {
+      moreVisibleComments();
+      socialComments.appendChild(addCommentsList(someCommentsListTwo));
+    });
+    // ------------------------------------------------- попытка разделить комменты
+
+    socialComments.appendChild(addCommentsList(someCommentsListTwo));
 
     window.form.bigPictureClouse.addEventListener('click', closeBigPhotoPhoto);
     document.addEventListener('keydown', closeBigPhotoPhotoEsc);
@@ -99,6 +118,7 @@
   var pictures = document.querySelector('.pictures');
 
   pictures.addEventListener('click', function (evt) {
+    evt.preventDefault();
     var target = evt.target;
 
     while (target !== pictures) {
