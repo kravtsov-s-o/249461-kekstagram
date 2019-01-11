@@ -34,6 +34,7 @@
 
     // вставка фрагмента с постами на страницу
     photoListElement.appendChild(fragment);
+    imgFilters.classList.remove('img-filters--inactive');
 
     window.photosList = photos;
     window.customPhotosList = photos;
@@ -55,7 +56,7 @@
   var uploadForm = document.querySelector('.img-upload');
 
   var imgFilters = document.querySelector('.img-filters');
-  imgFilters.classList.remove('img-filters--inactive');
+  // imgFilters.classList.remove('img-filters--inactive');
 
   var btnPopular = imgFilters.querySelector('#filter-popular');
   var btnNew = imgFilters.querySelector('#filter-new');

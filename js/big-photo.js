@@ -3,6 +3,7 @@
 (function () {
   var START_NUMBERS_OF_COMMENTS = 5;
   var COMMENTS_STEP = 5;
+  var ENTER_KEYCODE = 13;
   // отрисовка большого фото
   var bigPicture = document.querySelector('.big-picture');
 
@@ -88,9 +89,6 @@
     var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
     var commentsLoader = bigPhoto.querySelector('.comments-loader');
 
-    // socialCommentCount.classList.add('hidden');
-    // commentsLoader.classList.add('hidden');
-
     // ------------------------------------------------- попытка разделить комменты
     var someCommentsList = commentsList.slice(0); // копируем массив с комментариями
     var visibleComments = START_NUMBERS_OF_COMMENTS;
@@ -103,14 +101,19 @@
       visibleComments += COMMENTS_STEP;
       someCommentsListTwo = someCommentsList.slice(0, visibleComments);
       visibleCommentsCount.textContent = someCommentsListTwo.length;
+
+      if (someCommentsList.length === someCommentsListTwo.length) {
+        commentsLoader.classList.add('hidden');
+      }
+
       return someCommentsListTwo;
     }
 
     commentsLoader.addEventListener('click', function () {
       socialComments.innerHTML = '';
       socialComments.appendChild(addCommentsList(moreVisibleComments()));
-
     });
+
     // ------------------------------------------------- попытка разделить комменты
 
     socialComments.appendChild(addCommentsList(someCommentsListTwo));
@@ -120,15 +123,17 @@
   }
 
   // ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
+  var bodyHtml = document.querySelector('body');
+
   var pictures = document.querySelector('.pictures');
 
   pictures.addEventListener('click', function (evt) {
-    // evt.preventDefault();
     var target = evt.target;
 
     while (target !== pictures) {
       if (target.tagName === 'A') {
         evt.preventDefault();
+        bodyHtml.classList.add('modal-open');
         bigPicture.classList.remove('hidden');
         commentsList = renderCommentsList(window.customPhotosList[number]);
         renderCard(window.customPhotosList[number]);
@@ -140,9 +145,27 @@
     }
   });
 
+  // ----- открытие фотографий по клавише ENTER
+  pictures.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      var target = evt.target;
+      var number = target.dataset.id;
+      if (target.tagName === 'A') {
+        evt.preventDefault();
+        bodyHtml.classList.add('modal-open');
+        bigPicture.classList.remove('hidden');
+        commentsList = renderCommentsList(window.customPhotosList[number]);
+        renderCard(window.customPhotosList[number]);
+        return;
+      }
+    }
+  });
+  // ----- открытие фотографий по клавише ENTER
+
   // закрытие большого фото
   function closeBigPhotoPhoto() {
     bigPicture.classList.add('hidden');
+    bodyHtml.classList.remove('modal-open');
     window.form.bigPictureClouse.removeEventListener('click', closeBigPhotoPhoto);
     document.removeEventListener('keydown', closeBigPhotoPhotoEsc);
   }
@@ -154,4 +177,5 @@
   }
 
   window.bigPicture = bigPicture;
+
 })();
