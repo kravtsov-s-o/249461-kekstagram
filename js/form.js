@@ -10,6 +10,9 @@
   var uploadCancel = uploadOverlay.querySelector('.img-upload__cancel');
   var bigPictureClouse = window.bigPicture.querySelector('.big-picture__cancel');
 
+  var imgUploadForm = document.querySelector('.img-upload__form');
+  var formInputs = imgUploadForm.querySelectorAll('input');
+
   // открытие окна редактирования загруженого фото
   uploadFile.onchange = function () {
     uploadOverlay.classList.remove('hidden');
@@ -25,6 +28,9 @@
     uploadOverlay.classList.add('hidden');
     uploadCancel.removeEventListener('click', closeUploadPhoto);
     document.removeEventListener('keydown', closeUploadPhotoEsc);
+
+    formInputs.value = '';
+    window.form.hashtags.setCustomValidity('');
   }
 
   function closeUploadPhotoEsc(evt) {
@@ -177,8 +183,10 @@
     var successTemplate = document.querySelector('#success').content;
     var messageSuccess = successTemplate.cloneNode(true);
     var successButton = messageSuccess.querySelector('.success__button');
+
     main.appendChild(messageSuccess);
     successButton.addEventListener('click', closeMessageSuccess);
+    document.addEventListener('click', closeMessageSuccess);
     document.addEventListener('keydown', closeMessageSuccessEsc);
   }
 
@@ -187,9 +195,10 @@
     var successTemplate = document.querySelector('#success').content;
     var messageSuccess = successTemplate.cloneNode(true);
     var successButton = messageSuccess.querySelector('.success__button');
-    var successUpload = main.querySelector('.success');
-    successUpload.remove();
+    var popupSuccess = main.querySelector('.success');
+    popupSuccess.remove();
     successButton.removeEventListener('click', closeMessageSuccess);
+    document.removeEventListener('click', closeMessageSuccess);
     document.removeEventListener('keydown', closeMessageSuccessEsc);
   }
 
@@ -206,10 +215,12 @@
     var errorMessage = errorTemplate.cloneNode(true);
     var buttonTryAgain = errorMessage.querySelector('.error__button:nth-child(1)');
     var buttonOtherFile = errorMessage.querySelector('.error__button:nth-child(2)');
+    var errorUpload = main.querySelector('.error');
     main.appendChild(errorMessage);
     buttonTryAgain.addEventListener('click', closeErrorMessage);
     buttonOtherFile.addEventListener('click', closeErrorMessage);
     document.addEventListener('keydown', closeErrorMessageEsc);
+    errorUpload.addEventListener('click', closeErrorMessage);
   }
 
   // закрытие окна ошибки загрузки
@@ -223,6 +234,7 @@
     buttonTryAgain.removeEventListener('click', closeErrorMessage);
     buttonOtherFile.removeEventListener('click', closeErrorMessage);
     document.removeEventListener('keydown', closeErrorMessageEsc);
+    errorUpload.removeEventListener('click', closeErrorMessage);
   }
 
   function closeErrorMessageEsc(evt) {
@@ -235,6 +247,7 @@
   window.form = {
     ESC_KEYCODE: ESC_KEYCODE,
     bigPictureClouse: bigPictureClouse,
+    uploadFile: uploadFile,
     downloadPhoto: downloadPhoto,
     effectLevel: effectLevel,
     effectLevelPin: effectLevelPin,
