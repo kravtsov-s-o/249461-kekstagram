@@ -28,9 +28,9 @@
     }
   }
 
-  buttonMin.addEventListener('click', photoReduction());
+  buttonMin.addEventListener('click', photoReduction);
 
-  buttonMax.addEventListener('click', photoIncrease());
+  buttonMax.addEventListener('click', photoIncrease);
 
   window.scaleValue = scaleValue;
 })();
