@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var MIN_SIZE_PHOTO = 25;
+  var MAX_SIZE_PHOTO = 100;
+  var SCALE_STEP = 25;
+
   // управление масштабом фотографии
 
   var scaleValue = document.querySelector('.scale__control--value');
@@ -8,36 +12,31 @@
   var buttonMax = document.querySelector('.scale__control--bigger');
 
   scaleValue.value = '100%';
+  var currentPhotoScale = MAX_SIZE_PHOTO;
 
-  buttonMin.onclick = function () {
-    if (scaleValue.value === '100%') {
-      window.form.downloadPhoto.style.transform = 'scale(0.75)';
-      scaleValue.value = '75%';
-    } else if (scaleValue.value === '75%') {
-      window.form.downloadPhoto.style.transform = 'scale(0.5)';
-      scaleValue.value = '50%';
-    } else if (scaleValue.value === '50%') {
-      window.form.downloadPhoto.style.transform = 'scale(0.25)';
-      scaleValue.value = '25%';
+  function photoReducion() {
+    if (currentPhotoScale > MIN_SIZE_PHOTO) {
+      currentPhotoScale -= SCALE_STEP;
+      window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
+      scaleValue.value = currentPhotoScale + '%';
     }
+  }
 
-    return scaleValue;
-  };
-
-  buttonMax.onclick = function () {
-    if (scaleValue.value === '25%') {
-      window.form.downloadPhoto.style.transform = 'scale(0.5)';
-      scaleValue.value = '50%';
-    } else if (scaleValue.value === '50%') {
-      window.form.downloadPhoto.style.transform = 'scale(0.75)';
-      scaleValue.value = '75%';
-    } else if (scaleValue.value === '75%') {
-      window.form.downloadPhoto.style.transform = 'scale(1)';
-      scaleValue.value = '100%';
+  function photoIncrease() {
+    if (currentPhotoScale < MAX_SIZE_PHOTO) {
+      currentPhotoScale += SCALE_STEP;
+      window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
+      scaleValue.value = currentPhotoScale + '%';
     }
+  }
 
-    return scaleValue;
-  };
+  buttonMin.addEventListener('click', function () {
+    photoReducion();
+  });
+
+  buttonMax.addEventListener('click', function () {
+    photoIncrease();
+  });
 
   window.scaleValue = scaleValue;
 })();

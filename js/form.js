@@ -8,20 +8,19 @@
   var uploadOverlay = document.querySelector('.img-upload__overlay');
 
   var uploadCancel = uploadOverlay.querySelector('.img-upload__cancel');
-  var bigPictureClouse = window.bigPicture.querySelector('.big-picture__cancel');
 
   var imgUploadForm = document.querySelector('.img-upload__form');
   var formInputs = imgUploadForm.querySelectorAll('input');
 
   // открытие окна редактирования загруженого фото
-  uploadFile.onchange = function () {
+  uploadFile.addEventListener('change', function () {
     uploadOverlay.classList.remove('hidden');
 
     uploadCancel.addEventListener('click', closeUploadPhoto);
     document.addEventListener('keydown', closeUploadPhotoEsc);
 
     effectLevel.classList.add('hidden');
-  };
+  });
 
   // закрытие окна редактирования
   function closeUploadPhoto() {
@@ -53,32 +52,32 @@
 
   var effectValue;
 
-  function effectCalc(max, min, value) {
+  function effectCalculation(max, min, value) {
     return (max - min) * (value / window.gallery.MAX_SLIDER_VALUE);
   }
 
-  function effectWithSomeLevel(someLevel) {
+  function calculationEffectWithSomeLevel(someLevel) {
     effectLevelPin.style.left = someLevel + '%';
     effectLevelDepth.style.width = someLevel + '%';
-    effectLevelValue.value = someLevel;
+    effectLevelValue.value = Math.floor(someLevel);
 
     var effectFilter;
 
     if (effectValue === 'chrome') {
       effectFilter = 'grayscale';
-      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, someLevel) + ')';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalculation(1, 0, someLevel) + ')';
     } else if (effectValue === 'sepia') {
       effectFilter = 'sepia';
-      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(1, 0, someLevel) + ')';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalculation(1, 0, someLevel) + ')';
     } else if (effectValue === 'marvin') {
       effectFilter = 'invert';
-      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(100, 0, someLevel) + '%)';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalculation(100, 0, someLevel) + '%)';
     } else if (effectValue === 'phobos') {
       effectFilter = 'blur';
-      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 0, someLevel) + 'px)';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalculation(3, 0, someLevel) + 'px)';
     } else {
       effectFilter = 'brightness';
-      downloadPhoto.style.filter = effectFilter + '(' + effectCalc(3, 1, someLevel) + ')';
+      downloadPhoto.style.filter = effectFilter + '(' + effectCalculation(3, 1, someLevel) + ')';
     }
   }
 
@@ -107,8 +106,8 @@
 
     effectLevelLine.addEventListener('click', function (evt) {
       var clickX = evt.offsetX;
-      var clickOffset = Math.floor(clickX / (effectLevelLine.offsetWidth / window.gallery.MAX_SLIDER_VALUE)); // 100% максимальная длина слайдера
-      effectWithSomeLevel(clickOffset);
+      var clickOffset = Math.floor(clickX / (effectLevelLine.offsetWidth / window.gallery.MAX_SLIDER_VALUE));
+      calculationEffectWithSomeLevel(clickOffset);
     });
   });
 
@@ -120,23 +119,23 @@
   var hashtags = formUploadPhoto.querySelector('.text__hashtags');
   var uploadPhotoComment = formUploadPhoto.querySelector('.text__description');
 
-  function checkOctothorpe(hashtagsArrayElement) {
-    return hashtagsArrayElement !== '#' ? true : false;
+  function checkOctothorpe(hashtag) {
+    return hashtag !== '#' ? true : false;
   }
 
-  function checkHashtagMaxLength(hashtagsArrayElement) {
-    return hashtagsArrayElement.length > 20 ? true : false;
+  function checkHashtagMaxLength(hashtag) {
+    return hashtag.length > 20 ? true : false;
   }
 
-  function checkHashtagMinLength(hashtagsArrayElement) {
-    return hashtagsArrayElement.length < 2 ? true : false;
+  function checkHashtagMinLength(hashtag) {
+    return hashtag.length < 2 ? true : false;
   }
 
-  function checkHashtagsRepeat(hashtagsArrayElement) {
+  function checkHashtagsRepeat(hashtagsArray) {
     var hashtagsObj = {};
 
-    for (var repeat = 0; repeat < hashtagsArrayElement.length; repeat++) {
-      var key = hashtagsArrayElement[repeat];
+    for (var repeat = 0; repeat < hashtagsArray.length; repeat++) {
+      var key = hashtagsArray[repeat];
       if (hashtagsObj[key]) {
         return true;
       }
@@ -146,21 +145,21 @@
   }
 
   // запрет закртыия окна на Esc при активных полях формы
-  hashtags.onfocus = function () {
+  hashtags.addEventListener('focus', function () {
     document.removeEventListener('keydown', closeUploadPhotoEsc);
-  };
+  });
 
-  hashtags.onblur = function () {
+  hashtags.addEventListener('blur', function () {
     document.addEventListener('keydown', closeUploadPhotoEsc);
-  };
+  });
 
-  uploadPhotoComment.onfocus = function () {
+  uploadPhotoComment.addEventListener('focus', function () {
     document.removeEventListener('keydown', closeUploadPhotoEsc);
-  };
+  });
 
-  uploadPhotoComment.onblur = function () {
+  uploadPhotoComment.addEventListener('blur', function () {
     document.addEventListener('keydown', closeUploadPhotoEsc);
-  };
+  });
 
   var main = document.querySelector('main');
 
@@ -192,12 +191,8 @@
 
   // закрытие окна успешной загрузки
   function closeMessageSuccess() {
-    var successTemplate = document.querySelector('#success').content;
-    var messageSuccess = successTemplate.cloneNode(true);
-    var successButton = messageSuccess.querySelector('.success__button');
     var popupSuccess = main.querySelector('.success');
     popupSuccess.remove();
-    successButton.removeEventListener('click', closeMessageSuccess);
     document.removeEventListener('click', closeMessageSuccess);
     document.removeEventListener('keydown', closeMessageSuccessEsc);
   }
@@ -225,14 +220,8 @@
 
   // закрытие окна ошибки загрузки
   function closeErrorMessage() {
-    var errorTemplate = document.querySelector('#error').content;
-    var errorMessage = errorTemplate.cloneNode(true);
-    var buttonTryAgain = errorMessage.querySelector('.error__button:nth-child(1)');
-    var buttonOtherFile = errorMessage.querySelector('.error__button:nth-child(2)');
     var errorUpload = main.querySelector('.error');
     errorUpload.remove();
-    buttonTryAgain.removeEventListener('click', closeErrorMessage);
-    buttonOtherFile.removeEventListener('click', closeErrorMessage);
     document.removeEventListener('keydown', closeErrorMessageEsc);
     errorUpload.removeEventListener('click', closeErrorMessage);
   }
@@ -246,13 +235,12 @@
 
   window.form = {
     ESC_KEYCODE: ESC_KEYCODE,
-    bigPictureClouse: bigPictureClouse,
     uploadFile: uploadFile,
     downloadPhoto: downloadPhoto,
     effectLevel: effectLevel,
     effectLevelPin: effectLevelPin,
     effectLevelLine: effectLevelLine,
-    effectWithSomeLevel: effectWithSomeLevel,
+    calculationEffectWithSomeLevel: calculationEffectWithSomeLevel,
     buttonPublish: buttonPublish,
     checkOctothorpe: checkOctothorpe,
     checkHashtagMaxLength: checkHashtagMaxLength,

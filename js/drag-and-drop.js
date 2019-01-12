@@ -27,7 +27,7 @@
         clickOffset = window.gallery.MAX_SLIDER_VALUE;
       }
 
-      window.form.effectWithSomeLevel(clickOffset);
+      window.form.calculationEffectWithSomeLevel(clickOffset);
     }
 
     function onMouseUp(upEvt) {

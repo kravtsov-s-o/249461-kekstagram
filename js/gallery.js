@@ -12,15 +12,15 @@
   var templatePhotoSomeUser = document.querySelector('#picture').content;
 
   // функция рендера поста с фотографией
-  function renderPhoto(generatePhoto, number) {
+  function renderPhoto(generatedPhoto, number) {
     var photoElement = templatePhotoSomeUser.cloneNode(true);
 
     var picture = photoElement.querySelector('.picture');
     picture.dataset.id = number;
 
-    photoElement.querySelector('.picture__img').src = generatePhoto.url;
-    photoElement.querySelector('.picture__comments').textContent = generatePhoto.comments.length;
-    photoElement.querySelector('.picture__likes').textContent = generatePhoto.likes;
+    photoElement.querySelector('.picture__img').src = generatedPhoto.url;
+    photoElement.querySelector('.picture__comments').textContent = generatedPhoto.comments.length;
+    photoElement.querySelector('.picture__likes').textContent = generatedPhoto.likes;
 
     return photoElement;
   }
@@ -58,11 +58,11 @@
   var imgFilters = document.querySelector('.img-filters');
   // imgFilters.classList.remove('img-filters--inactive');
 
-  var btnPopular = imgFilters.querySelector('#filter-popular');
-  var btnNew = imgFilters.querySelector('#filter-new');
-  var btnDiscussed = imgFilters.querySelector('#filter-discussed');
+  var buttonPopular = imgFilters.querySelector('#filter-popular');
+  var buttonNew = imgFilters.querySelector('#filter-new');
+  var buttonDiscussed = imgFilters.querySelector('#filter-discussed');
 
-  var btnActive = btnPopular;
+  var buttonActive = buttonPopular;
 
   imgFilters.addEventListener('click', function (evt) {
     var target = evt.target;
@@ -115,24 +115,24 @@
       return;
     }
 
-    if (target === btnPopular) {
-      btnActive.classList.remove('img-filters__button--active');
-      btnActive = target;
-      btnActive.classList.add('img-filters__button--active');
+    if (target === buttonPopular) {
+      buttonActive.classList.remove('img-filters__button--active');
+      buttonActive = target;
+      buttonActive.classList.add('img-filters__button--active');
 
       createPosts(popularArray);
 
-    } else if (target === btnNew) {
-      btnActive.classList.remove('img-filters__button--active');
-      btnActive = target;
-      btnActive.classList.add('img-filters__button--active');
+    } else if (target === buttonNew) {
+      buttonActive.classList.remove('img-filters__button--active');
+      buttonActive = target;
+      buttonActive.classList.add('img-filters__button--active');
 
       createPosts(getRandomNewArray(popularArray));
 
-    } else if (target === btnDiscussed) {
-      btnActive.classList.remove('img-filters__button--active');
-      btnActive = target;
-      btnActive.classList.add('img-filters__button--active');
+    } else if (target === buttonDiscussed) {
+      buttonActive.classList.remove('img-filters__button--active');
+      buttonActive = target;
+      buttonActive.classList.add('img-filters__button--active');
 
       createPosts(getDiscussedArray(popularArray));
     }
