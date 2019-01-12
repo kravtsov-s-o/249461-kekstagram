@@ -5,8 +5,6 @@
   var MAX_SIZE_PHOTO = 100;
   var SCALE_STEP = 25;
 
-  // управление масштабом фотографии
-
   var scaleValue = document.querySelector('.scale__control--value');
   var buttonMin = document.querySelector('.scale__control--smaller');
   var buttonMax = document.querySelector('.scale__control--bigger');
@@ -30,13 +28,9 @@
     }
   }
 
-  buttonMin.addEventListener('click', function () {
-    photoReducion();
-  });
+  buttonMin.addEventListener('click', photoReducion());
 
-  buttonMax.addEventListener('click', function () {
-    photoIncrease();
-  });
+  buttonMax.addEventListener('click', photoIncrease());
 
   window.scaleValue = scaleValue;
 })();

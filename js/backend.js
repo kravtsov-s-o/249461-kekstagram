@@ -2,9 +2,8 @@
 
 (function () {
   var SUCCESS_CODE = 200;
-  var TIMEOUT = 5000;
+  var TIMEOUT = 10000;
 
-  // отправка формы на сервер
   var URL_UPLOAD = 'https://js.dump.academy/kekstagram';
   var URL_DATA = 'https://js.dump.academy/kekstagram/data';
 
@@ -23,7 +22,7 @@
       onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError('Долгий ответ сервера');
     });
 
     xhr.timeout = TIMEOUT; // 5s
@@ -32,9 +31,7 @@
     xhr.open('POST', URL_UPLOAD);
     xhr.send(data);
   };
-  // отправка формы на сервер
 
-  // загрузка данных с сервера
   window.loadData = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -53,10 +50,10 @@
       onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError('Долгий ответ сервера');
     });
 
-    xhr.timeout = TIMEOUT; // 5s
+    xhr.timeout = TIMEOUT;
 
     xhr.send();
   };

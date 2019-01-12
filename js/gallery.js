@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-  var AVATAR_SIZE = '35'; // размер аватара
+  var AVATAR_SIZE = '35';
 
-  var MAX_SLIDER_VALUE = 100; // размер в 100%;
+  var MAX_SLIDER_VALUE = 100;
 
   var FIRST_NUMBER_ARRAY = 0;
   var AMOUNT_PHOTOS = 10;
@@ -11,7 +11,6 @@
   var photoListElement = document.querySelector('.pictures');
   var templatePhotoSomeUser = document.querySelector('#picture').content;
 
-  // функция рендера поста с фотографией
   function renderPhoto(generatedPhoto, number) {
     var photoElement = templatePhotoSomeUser.cloneNode(true);
 
@@ -26,13 +25,11 @@
   }
 
   window.loadData(function (photos) {
-    // создание фрагмента с постами перед вставкой на страницу
     var fragment = document.createDocumentFragment();
     for (var j = 0; j < photos.length; j++) {
       fragment.appendChild(renderPhoto(photos[j], j));
     }
 
-    // вставка фрагмента с постами на страницу
     photoListElement.appendChild(fragment);
     imgFilters.classList.remove('img-filters--inactive');
 
@@ -51,12 +48,9 @@
     document.body.insertAdjacentElement('afterbegin', node);
   });
 
-  // ФИЛЬТР ЗАГРУЖЕННЫХ ПОСТОВ ------------------------------
-
   var uploadForm = document.querySelector('.img-upload');
 
   var imgFilters = document.querySelector('.img-filters');
-  // imgFilters.classList.remove('img-filters--inactive');
 
   var buttonPopular = imgFilters.querySelector('#filter-popular');
   var buttonNew = imgFilters.querySelector('#filter-new');
@@ -72,13 +66,12 @@
 
     function createPosts(arrayName) {
       photoListElement.innerHTML = '';
-      // создание фрагмента с постами перед вставкой на страницу
+
       var fragment = document.createDocumentFragment();
       for (var j = 0; j < arrayName.length; j++) {
         fragment.appendChild(renderPhoto(arrayName[j], j));
       }
 
-      // вставка фрагмента с постами на страницу
       photoListElement.appendChild(uploadForm);
       photoListElement.appendChild(fragment);
     }
@@ -109,8 +102,6 @@
       return discussedArray;
     }
 
-    // ----------
-
     if (target === 'BUTTON') {
       return;
     }
@@ -139,8 +130,6 @@
 
     window.customPhotosList = customPhotosList;
   });
-
-  // ФИЛЬТР ЗАГРУЖЕННЫХ ПОСТОВ ------------------------------
 
   window.gallery = {
     AVATAR_SIZE: AVATAR_SIZE,

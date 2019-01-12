@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var ERROR_COLOR = 'red';
 

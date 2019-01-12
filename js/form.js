@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  // ---------------------------------------------- Modulle 4. Обработка событий
   var ESC_KEYCODE = 27;
 
   var uploadFile = document.querySelector('.img-upload__input');
@@ -12,38 +11,36 @@
   var imgUploadForm = document.querySelector('.img-upload__form');
   var formInputs = imgUploadForm.querySelectorAll('input');
 
-  // открытие окна редактирования загруженого фото
   uploadFile.addEventListener('change', function () {
     uploadOverlay.classList.remove('hidden');
 
     uploadCancel.addEventListener('click', closeUploadPhoto);
-    document.addEventListener('keydown', closeUploadPhotoEsc);
+    document.addEventListener('keydown', uploadPhotoCloseEscHandler);
 
     effectLevel.classList.add('hidden');
   });
 
-  // закрытие окна редактирования
   function closeUploadPhoto() {
     uploadOverlay.classList.add('hidden');
     uploadCancel.removeEventListener('click', closeUploadPhoto);
-    document.removeEventListener('keydown', closeUploadPhotoEsc);
+    document.removeEventListener('keydown', uploadPhotoCloseEscHandler);
 
     formInputs.value = '';
     window.form.hashtags.setCustomValidity('');
   }
 
-  function closeUploadPhotoEsc(evt) {
+  function uploadPhotoCloseEscHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
+      if (document.activeElement === uploadPhotoComment || document.activeElement === hashtags) {
+        return;
+      }
       closeUploadPhoto();
     }
   }
 
-  // ------------------------------------------
-  // превью картинки
   var downloadPhoto = uploadOverlay.querySelector('.img-upload__preview img');
   var effectsList = document.querySelector('.effects__list');
 
-  // переменные для работы с баром эффектов
   var effectLevel = uploadOverlay.querySelector('.effect-level');
   var effectLevelLine = effectLevel.querySelector('.effect-level__line');
   var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
@@ -92,7 +89,7 @@
     var targetInput = target.querySelector('input');
     downloadPhoto.classList.remove('effects__preview--' + effectValue);
     effectValue = targetInput.value;
-    downloadPhoto.removeAttribute('style'); // удаляет ранее применный стиль с ползунка
+    downloadPhoto.removeAttribute('style');
     downloadPhoto.classList.add('effects__preview--' + effectValue);
     window.scaleValue.value = '100%';
 
@@ -110,8 +107,6 @@
       calculationEffectWithSomeLevel(clickOffset);
     });
   });
-
-  // ------- ВАЛИДАЦИЯ ХЭШ-ТЕГОВ --------------
 
   var formUploadPhoto = document.querySelector('.img-upload__form');
   var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
@@ -144,26 +139,8 @@
     return false;
   }
 
-  // запрет закртыия окна на Esc при активных полях формы
-  hashtags.addEventListener('focus', function () {
-    document.removeEventListener('keydown', closeUploadPhotoEsc);
-  });
-
-  hashtags.addEventListener('blur', function () {
-    document.addEventListener('keydown', closeUploadPhotoEsc);
-  });
-
-  uploadPhotoComment.addEventListener('focus', function () {
-    document.removeEventListener('keydown', closeUploadPhotoEsc);
-  });
-
-  uploadPhotoComment.addEventListener('blur', function () {
-    document.addEventListener('keydown', closeUploadPhotoEsc);
-  });
-
   var main = document.querySelector('main');
 
-  // ------------------------------------------------------------------------------------------------
   formUploadPhoto.addEventListener('submit', function (evt) {
     window.upload(new FormData(formUploadPhoto), function () {
       uploadOverlay.classList.add('hidden');
@@ -175,9 +152,7 @@
 
     evt.preventDefault();
   });
-  // ------------------------------------------------------------------------------------------------
-  // ОКНО УСПЕШНОЙ ЗАГРУЗКИ ФОТО
-  // открытие окна успешной загрузки
+
   function openSuccessMessage() {
     var successTemplate = document.querySelector('#success').content;
     var messageSuccess = successTemplate.cloneNode(true);
@@ -186,25 +161,22 @@
     main.appendChild(messageSuccess);
     successButton.addEventListener('click', closeMessageSuccess);
     document.addEventListener('click', closeMessageSuccess);
-    document.addEventListener('keydown', closeMessageSuccessEsc);
+    document.addEventListener('keydown', messageSuccessCloseEsc);
   }
 
-  // закрытие окна успешной загрузки
   function closeMessageSuccess() {
     var popupSuccess = main.querySelector('.success');
     popupSuccess.remove();
     document.removeEventListener('click', closeMessageSuccess);
-    document.removeEventListener('keydown', closeMessageSuccessEsc);
+    document.removeEventListener('keydown', messageSuccessCloseEsc);
   }
 
-  function closeMessageSuccessEsc(evt) {
+  function messageSuccessCloseEsc(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeMessageSuccess();
     }
   }
 
-  // ------------------------------------------------------------------------------------------------
-  // ОКНО ОШИБКИ ЗАГРУЗКИ ФОТО
   function openErrorMessage() {
     var errorTemplate = document.querySelector('#error').content;
     var errorMessage = errorTemplate.cloneNode(true);
@@ -214,24 +186,22 @@
     main.appendChild(errorMessage);
     buttonTryAgain.addEventListener('click', closeErrorMessage);
     buttonOtherFile.addEventListener('click', closeErrorMessage);
-    document.addEventListener('keydown', closeErrorMessageEsc);
+    document.addEventListener('keydown', errorMessageCloseEsc);
     errorUpload.addEventListener('click', closeErrorMessage);
   }
 
-  // закрытие окна ошибки загрузки
   function closeErrorMessage() {
     var errorUpload = main.querySelector('.error');
     errorUpload.remove();
-    document.removeEventListener('keydown', closeErrorMessageEsc);
+    document.removeEventListener('keydown', errorMessageCloseEsc);
     errorUpload.removeEventListener('click', closeErrorMessage);
   }
 
-  function closeErrorMessageEsc(evt) {
+  function errorMessageCloseEsc(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeMessageSuccess();
     }
   }
-  // ------------------------------------------------------------------------------------------------
 
   window.form = {
     ESC_KEYCODE: ESC_KEYCODE,

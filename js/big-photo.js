@@ -5,11 +5,9 @@
   var COMMENTS_STEP = 5;
   var ENTER_KEYCODE = 13;
 
-  // отрисовка большого фото
   var bigPicture = document.querySelector('.big-picture');
-  var bigPictureClouse = bigPicture.querySelector('.big-picture__cancel');
+  var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
 
-  // рендер большого фото
   function renderBigPhoto(photoToView) {
     var photo = bigPicture.querySelector('.big-picture__preview');
 
@@ -23,7 +21,6 @@
     return photo;
   }
 
-  /* генерация аватара комментатора */
   function renderAvatar(autorAvatar, i) {
     var avatar = document.createElement('img');
     avatar.className = 'social__picture';
@@ -35,7 +32,6 @@
     return avatar;
   }
 
-  /* генерация сообщения комментатора */
   function renderMessage(commentText, i) {
     var message = document.createElement('p');
     message.className = 'social__text';
@@ -44,7 +40,6 @@
     return message;
   }
 
-  /* генерация комментария */
   function renderComment(readyComment, i) {
     var comment = document.createElement('li');
     comment.className = 'social__comment';
@@ -55,7 +50,6 @@
     return comment;
   }
 
-  // функиця генерации списка комментариев к большому фото
   function renderCommentsList(photoToView) {
     var comments = [];
 
@@ -67,9 +61,8 @@
     return comments;
   }
 
-  var commentsList = []; // массив комментариев
+  var commentsList = [];
 
-  // создание фрагмента с комментариями
   function addCommentsToList(addedСomments) {
     var fragmentComments = document.createDocumentFragment();
 
@@ -80,35 +73,32 @@
     return fragmentComments;
   }
 
-  // функция создания фотографии
   function renderCard(photoNumber) {
     var bigPhoto = renderBigPhoto(photoNumber);
 
     var socialComments = bigPhoto.querySelector('.social__comments');
     socialComments.innerHTML = '';
 
-    // Скрытие кол-ва комментариев и загрузки дополнительных
     var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
     var commentsLoader = bigPhoto.querySelector('.comments-loader');
 
-    // ------------------------------------------------- попытка разделить комменты
-    var someCommentsList = commentsList.slice(0); // копируем массив с комментариями
+    var commentsListCopy = commentsList.slice(0);
     var visibleComments = START_NUMBERS_OF_COMMENTS;
-    var visiblSomeCommentsList = someCommentsList.slice(0, visibleComments); // вырезаем часть показанную по умолчанию
+    var visibleCommentsList = commentsListCopy.slice(0, visibleComments);
 
     var visibleCommentsCount = socialCommentCount.querySelector('span');
-    visibleCommentsCount.textContent = visiblSomeCommentsList.length;
+    visibleCommentsCount.textContent = visibleCommentsList.length;
 
     function moreVisibleComments() {
       visibleComments += COMMENTS_STEP;
-      visiblSomeCommentsList = someCommentsList.slice(0, visibleComments);
-      visibleCommentsCount.textContent = visiblSomeCommentsList.length;
+      visibleCommentsList = commentsListCopy.slice(0, visibleComments);
+      visibleCommentsCount.textContent = visibleCommentsList.length;
 
-      if (someCommentsList.length === visiblSomeCommentsList.length) {
+      if (commentsListCopy.length === visibleCommentsList.length) {
         commentsLoader.classList.add('hidden');
       }
 
-      return visiblSomeCommentsList;
+      return visibleCommentsList;
     }
 
     commentsLoader.addEventListener('click', function () {
@@ -116,25 +106,23 @@
       socialComments.appendChild(addCommentsToList(moreVisibleComments()));
     });
 
-    // ------------------------------------------------- попытка разделить комменты
+    socialComments.appendChild(addCommentsToList(visibleCommentsList));
 
-    socialComments.appendChild(addCommentsToList(visiblSomeCommentsList));
-
-    bigPictureClouse.addEventListener('click', closeBigPhoto);
-    document.addEventListener('keydown', closeBigPhotoEsc);
+    bigPictureClose.addEventListener('click', closeBigPhoto);
+    document.addEventListener('keydown', bigPhotoCloseEscHandler);
   }
 
-  // ---------------------------- Открытие и закрытие фотографий ----------------------------- Временное разделение блоков кода
   var bodyHtml = document.querySelector('body');
 
   var pictures = document.querySelector('.pictures');
 
-  pictures.addEventListener('click', function (evt) {
+  function openingLargePhoto(evt) {
     var target = evt.target;
 
     while (target !== pictures) {
       if (target.tagName === 'A') {
         evt.preventDefault();
+        var number = target.dataset.id;
         bodyHtml.classList.add('modal-open');
         bigPicture.classList.remove('hidden');
         commentsList = renderCommentsList(window.customPhotosList[number]);
@@ -143,40 +131,27 @@
         return;
       }
       target = target.parentNode;
-      var number = target.dataset.id;
     }
+  }
+
+  pictures.addEventListener('click', function (evt) {
+    openingLargePhoto(evt);
   });
 
-  // ----- открытие фотографий по клавише ENTER
   pictures.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      var target = evt.target;
-      var number = target.dataset.id;
-      while (target !== pictures) {
-        if (target.tagName === 'A') {
-          evt.preventDefault();
-          bodyHtml.classList.add('modal-open');
-          bigPicture.classList.remove('hidden');
-          commentsList = renderCommentsList(window.customPhotosList[number]);
-          renderCard(window.customPhotosList[number]);
-
-          return;
-        }
-        target = target.parentNode;
-      }
+      openingLargePhoto(evt);
     }
   });
-  // ----- открытие фотографий по клавише ENTER
 
-  // закрытие большого фото
   function closeBigPhoto() {
     bigPicture.classList.add('hidden');
     bodyHtml.classList.remove('modal-open');
-    bigPictureClouse.removeEventListener('click', closeBigPhoto);
-    document.removeEventListener('keydown', closeBigPhotoEsc);
+    bigPictureClose.removeEventListener('click', closeBigPhoto);
+    document.removeEventListener('keydown', bigPhotoCloseEscHandler);
   }
 
-  function closeBigPhotoEsc(evt) {
+  function bigPhotoCloseEscHandler(evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       closeBigPhoto();
     }
