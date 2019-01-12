@@ -12,7 +12,7 @@
   scaleValue.value = '100%';
   var currentPhotoScale = MAX_SIZE_PHOTO;
 
-  function photoReducion() {
+  function photoReduction() {
     if (currentPhotoScale > MIN_SIZE_PHOTO) {
       currentPhotoScale -= SCALE_STEP;
       window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
@@ -28,7 +28,7 @@
     }
   }
 
-  buttonMin.addEventListener('click', photoReducion());
+  buttonMin.addEventListener('click', photoReduction());
 
   buttonMax.addEventListener('click', photoIncrease());
 
