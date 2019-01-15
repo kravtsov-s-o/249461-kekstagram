@@ -7,11 +7,11 @@
     var file = window.form.uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
-    var matches = FILE_TYPES.some(function (it) {
+    var match = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
 
-    if (matches) {
+    if (match) {
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {

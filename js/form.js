@@ -2,6 +2,8 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var MAX_HASHTAG_LENGTH = 20;
+  var MIN_HASHTAG_LENGTH = 2;
 
   var uploadFile = document.querySelector('.img-upload__input');
   var uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -9,13 +11,15 @@
   var uploadCancel = uploadOverlay.querySelector('.img-upload__cancel');
 
   var imgUploadForm = document.querySelector('.img-upload__form');
-  var formInputs = imgUploadForm.querySelectorAll('input');
+  // var formInputs = imgUploadForm.querySelectorAll('input');
 
   uploadFile.addEventListener('change', function () {
     uploadOverlay.classList.remove('hidden');
 
     uploadCancel.addEventListener('click', closeUploadPhoto);
     document.addEventListener('keydown', uploadPhotoCloseEscHandler);
+
+    window.scaleValue.value = '100%';
 
     effectLevel.classList.add('hidden');
   });
@@ -25,13 +29,12 @@
     uploadCancel.removeEventListener('click', closeUploadPhoto);
     document.removeEventListener('keydown', uploadPhotoCloseEscHandler);
 
-    formInputs.value = '';
-    window.form.hashtags.setCustomValidity('');
+    imgUploadForm.reset();
   }
 
   function uploadPhotoCloseEscHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      if (document.activeElement === uploadPhotoComment || document.activeElement === hashtags) {
+      if (document.activeElement === uploadPhotoComment || document.activeElement === hashtagsField) {
         return;
       }
       closeUploadPhoto();
@@ -111,7 +114,7 @@
   var formUploadPhoto = document.querySelector('.img-upload__form');
   var buttonPublish = uploadOverlay.querySelector('.img-upload__submit');
 
-  var hashtags = formUploadPhoto.querySelector('.text__hashtags');
+  var hashtagsField = formUploadPhoto.querySelector('.text__hashtags');
   var uploadPhotoComment = formUploadPhoto.querySelector('.text__description');
 
   function checkOctothorpe(hashtag) {
@@ -119,11 +122,11 @@
   }
 
   function checkHashtagMaxLength(hashtag) {
-    return hashtag.length > 20 ? true : false;
+    return hashtag.length > MAX_HASHTAG_LENGTH ? true : false;
   }
 
   function checkHashtagMinLength(hashtag) {
-    return hashtag.length < 2 ? true : false;
+    return hashtag.length < MIN_HASHTAG_LENGTH ? true : false;
   }
 
   function checkHashtagsRepeat(hashtagsArray) {
@@ -157,6 +160,8 @@
     var successTemplate = document.querySelector('#success').content;
     var messageSuccess = successTemplate.cloneNode(true);
     var successButton = messageSuccess.querySelector('.success__button');
+
+    imgUploadForm.reset();
 
     main.appendChild(messageSuccess);
     successButton.addEventListener('click', closeMessageSuccess);
@@ -216,6 +221,6 @@
     checkHashtagMaxLength: checkHashtagMaxLength,
     checkHashtagMinLength: checkHashtagMinLength,
     checkHashtagsRepeat: checkHashtagsRepeat,
-    hashtags: hashtags
+    hashtagsField: hashtagsField
   };
 })();
