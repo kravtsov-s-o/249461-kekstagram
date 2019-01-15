@@ -113,6 +113,8 @@
     };
   }
   // -----------------------------------
+  var debouncedCreatePosts = debounce(createPosts);
+  // -----------------------------------
 
   imgFiltersBlock.addEventListener('click', function (evt) {
     var target = evt.target;
@@ -129,21 +131,21 @@
       buttonActive = target;
       buttonActive.classList.add('img-filters__button--active');
 
-      createPosts(popularArray);
+      debouncedCreatePosts(popularArray);
 
     } else if (target === buttonNew) {
       buttonActive.classList.remove('img-filters__button--active');
       buttonActive = target;
       buttonActive.classList.add('img-filters__button--active');
 
-      createPosts(getRandomNewArray(popularArray));
+      debouncedCreatePosts(getRandomNewArray(popularArray));
 
     } else if (target === buttonDiscussed) {
       buttonActive.classList.remove('img-filters__button--active');
       buttonActive = target;
       buttonActive.classList.add('img-filters__button--active');
 
-      createPosts(getDiscussedArray(popularArray));
+      debouncedCreatePosts(getDiscussedArray(popularArray));
     }
 
     window.customPhotosList = customPhotosList;
