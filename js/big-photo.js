@@ -125,8 +125,8 @@
         var number = target.dataset.id;
         bodyHtml.classList.add('modal-open');
         bigPictureElement.classList.remove('hidden');
-        commentsList = renderCommentsList(window.customPhotosList[number]);
-        renderCard(window.customPhotosList[number]);
+        commentsList = renderCommentsList(window.gallery.customPhotosList[number]);
+        renderCard(window.gallery.customPhotosList[number]);
 
         return;
       }
