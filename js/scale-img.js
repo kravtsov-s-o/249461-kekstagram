@@ -32,5 +32,5 @@
 
   buttonMax.addEventListener('click', photoIncrease);
 
-  window.scaleImg.scaleValue = scaleValue;
+  window.scaleValue = scaleValue;
 })();

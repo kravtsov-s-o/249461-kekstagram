@@ -18,7 +18,7 @@
     uploadCancel.addEventListener('click', uploadPhotoCloseHandler);
     document.addEventListener('keydown', uploadPhotoCloseEscHandler);
 
-    window.scaleImg.scaleValue.value = '100%';
+    window.scaleValue.value = '100%';
 
     effectLevel.classList.add('hidden');
   });
@@ -93,7 +93,7 @@
     effectValue = targetInput.value;
     downloadPhoto.removeAttribute('style');
     downloadPhoto.classList.add('effects__preview--' + effectValue);
-    window.scaleImg.scaleValue.value = '100%';
+    window.scaleValue.value = '100%';
 
     if (effectValue === 'none') {
       effectLevel.classList.add('hidden');
