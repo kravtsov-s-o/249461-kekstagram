@@ -56,11 +56,11 @@
 
   var imgFiltersElement = document.querySelector('.img-filters');
 
-  var buttonPopular = imgFiltersElement.querySelector('#filter-popular');
-  var buttonNew = imgFiltersElement.querySelector('#filter-new');
-  var buttonDiscussed = imgFiltersElement.querySelector('#filter-discussed');
+  var buttonPopularElement = imgFiltersElement.querySelector('#filter-popular');
+  var buttonNewElement = imgFiltersElement.querySelector('#filter-new');
+  var buttonDiscussedElement = imgFiltersElement.querySelector('#filter-discussed');
 
-  var buttonActive = buttonPopular;
+  var buttonActive = buttonPopularElement;
 
   function createPosts(arrayName) {
     photoListElement.innerHTML = '';
@@ -129,13 +129,13 @@
       return;
     }
 
-    if (target === buttonPopular) {
+    if (target === buttonPopularElement) {
       activationCommentsList(target);
       debouncedCreatePosts(popularArray);
-    } else if (target === buttonNew) {
+    } else if (target === buttonNewElement) {
       activationCommentsList(target);
       debouncedCreatePosts(getRandomNewArray(popularArray));
-    } else if (target === buttonDiscussed) {
+    } else if (target === buttonDiscussedElement) {
       activationCommentsList(target);
       debouncedCreatePosts(getDiscussedArray(popularArray));
     }

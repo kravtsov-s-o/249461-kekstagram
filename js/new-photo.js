@@ -15,7 +15,7 @@
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        window.form.downloadPhoto.src = reader.result;
+        window.form.downloadPhotoElement.src = reader.result;
       });
 
       reader.readAsDataURL(file);

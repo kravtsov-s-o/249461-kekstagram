@@ -15,7 +15,7 @@
   function photoReduction() {
     if (currentPhotoScale > MIN_SIZE_PHOTO) {
       currentPhotoScale -= SCALE_STEP;
-      window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
+      window.form.downloadPhotoElement.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
       scaleValueElement.value = currentPhotoScale + '%';
     }
   }
@@ -23,7 +23,7 @@
   function photoIncrease() {
     if (currentPhotoScale < MAX_SIZE_PHOTO) {
       currentPhotoScale += SCALE_STEP;
-      window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
+      window.form.downloadPhotoElement.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
       scaleValueElement.value = currentPhotoScale + '%';
     }
   }

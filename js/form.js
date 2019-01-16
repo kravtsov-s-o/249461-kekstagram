@@ -20,7 +20,7 @@
 
     window.scaleValueElement.value = '100%';
 
-    effectLevel.classList.add('hidden');
+    effectLevelElement.classList.add('hidden');
   });
 
   function uploadPhotoCloseHandler() {
@@ -40,14 +40,14 @@
     }
   }
 
-  var downloadPhoto = uploadOverlayElement.querySelector('.img-upload__preview img');
+  var downloadPhotoElement = uploadOverlayElement.querySelector('.img-upload__preview img');
   var effectsListElement = document.querySelector('.effects__list');
 
-  var effectLevel = uploadOverlayElement.querySelector('.effect-level');
-  var effectLevelLine = effectLevel.querySelector('.effect-level__line');
-  var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
-  var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
-  var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+  var effectLevelElement = uploadOverlayElement.querySelector('.effect-level');
+  var effectLevelLineElement = effectLevelElement.querySelector('.effect-level__line');
+  var effectLevelPinElement = effectLevelElement.querySelector('.effect-level__pin');
+  var effectLevelDepthElement = effectLevelElement.querySelector('.effect-level__depth');
+  var effectLevelValueElement = effectLevelElement.querySelector('.effect-level__value');
 
   var effectValue;
 
@@ -56,25 +56,25 @@
   }
 
   function calculationEffectWithSomeLevel(someLevel) {
-    effectLevelPin.style.left = someLevel + '%';
-    effectLevelDepth.style.width = someLevel + '%';
-    effectLevelValue.value = Math.floor(someLevel);
+    effectLevelPinElement.style.left = someLevel + '%';
+    effectLevelDepthElement.style.width = someLevel + '%';
+    effectLevelValueElement.value = Math.floor(someLevel);
 
     switch (effectValue) {
       case 'chrome':
-        downloadPhoto.style.filter = 'grayscale(' + effectCalculation(1, 0, someLevel) + ')';
+        downloadPhotoElement.style.filter = 'grayscale(' + effectCalculation(1, 0, someLevel) + ')';
         break;
       case 'sepia':
-        downloadPhoto.style.filter = 'sepia(' + effectCalculation(1, 0, someLevel) + ')';
+        downloadPhotoElement.style.filter = 'sepia(' + effectCalculation(1, 0, someLevel) + ')';
         break;
       case 'marvin':
-        downloadPhoto.style.filter = 'invert(' + effectCalculation(100, 0, someLevel) + '%)';
+        downloadPhotoElement.style.filter = 'invert(' + effectCalculation(100, 0, someLevel) + '%)';
         break;
       case 'phobos':
-        downloadPhoto.style.filter = 'blur(' + effectCalculation(3, 1, someLevel) + 'px)';
+        downloadPhotoElement.style.filter = 'blur(' + effectCalculation(3, 1, someLevel) + 'px)';
         break;
       case 'heat':
-        downloadPhoto.style.filter = 'brightness(' + effectCalculation(3, 0, someLevel) + ')';
+        downloadPhotoElement.style.filter = 'brightness(' + effectCalculation(3, 0, someLevel) + ')';
         break;
     }
   }
@@ -88,29 +88,29 @@
     target = target.parentNode;
 
     var targetInput = target.querySelector('input');
-    downloadPhoto.classList.remove('effects__preview--' + effectValue);
+    downloadPhotoElement.classList.remove('effects__preview--' + effectValue);
     effectValue = targetInput.value;
-    downloadPhoto.removeAttribute('style');
-    downloadPhoto.classList.add('effects__preview--' + effectValue);
+    downloadPhotoElement.removeAttribute('style');
+    downloadPhotoElement.classList.add('effects__preview--' + effectValue);
     window.scaleValueElement.value = '100%';
 
     if (effectValue === 'none') {
-      effectLevel.classList.add('hidden');
+      effectLevelElement.classList.add('hidden');
     } else {
-      effectLevel.classList.remove('hidden');
-      effectLevelPin.style.left = '100%';
-      effectLevelDepth.style.width = '100%';
+      effectLevelElement.classList.remove('hidden');
+      effectLevelPinElement.style.left = '100%';
+      effectLevelDepthElement.style.width = '100%';
     }
 
-    effectLevelLine.addEventListener('click', function (evt) {
+    effectLevelLineElement.addEventListener('click', function (evt) {
       var clickX = evt.offsetX;
-      var clickOffset = Math.floor(clickX / (effectLevelLine.offsetWidth / window.gallery.MAX_SLIDER_VALUE));
+      var clickOffset = Math.floor(clickX / (effectLevelLineElement.offsetWidth / window.gallery.MAX_SLIDER_VALUE));
       calculationEffectWithSomeLevel(clickOffset);
     });
   });
 
   var formUploadPhotoElement = document.querySelector('.img-upload__form');
-  var buttonPublish = uploadOverlayElement.querySelector('.img-upload__submit');
+  var buttonPublishElement = uploadOverlayElement.querySelector('.img-upload__submit');
 
   var hashtagsElement = formUploadPhotoElement.querySelector('.text__hashtags');
   var uploadPhotoComment = formUploadPhotoElement.querySelector('.text__description');
@@ -156,24 +156,24 @@
 
   var successTemplateElement = document.querySelector('#success').content;
   var messageSuccess = successTemplateElement.cloneNode(true);
-  var successButton = messageSuccess.querySelector('.success__button');
+  var successButtonElement = messageSuccess.querySelector('.success__button');
   var errorTemplateElement = document.querySelector('#error').content;
   var errorMessage = errorTemplateElement.cloneNode(true);
-  var buttonTryAgain = errorMessage.querySelector('.error__button:nth-child(1)');
-  var buttonOtherFile = errorMessage.querySelector('.error__button:nth-child(2)');
+  var buttonTryAgainElement = errorMessage.querySelector('.error__button:nth-child(1)');
+  var buttonOtherFileElement = errorMessage.querySelector('.error__button:nth-child(2)');
 
   function openSuccessMessage() {
     imgUploadFormElement.reset();
 
     mainElement.appendChild(messageSuccess);
-    successButton.addEventListener('click', messageSuccessCloseHandler);
+    successButtonElement.addEventListener('click', messageSuccessCloseHandler);
     document.addEventListener('click', messageSuccessCloseHandler);
     document.addEventListener('keydown', messageSuccessCloseEscHandler);
   }
 
   function messageSuccessCloseHandler() {
-    var popupSuccess = mainElement.querySelector('.success');
-    popupSuccess.remove();
+    var popupSuccessElement = mainElement.querySelector('.success');
+    popupSuccessElement.remove();
     document.removeEventListener('click', messageSuccessCloseHandler);
     document.removeEventListener('keydown', messageSuccessCloseEscHandler);
   }
@@ -185,21 +185,21 @@
   }
 
   function openErrorMessage() {
-    var errorUpload = mainElement.querySelector('.error');
+    var errorUploadElement = mainElement.querySelector('.error');
 
     mainElement.appendChild(errorMessage);
-    buttonTryAgain.addEventListener('click', errorMessageCloseHandler);
-    buttonOtherFile.addEventListener('click', errorMessageCloseHandler);
+    buttonTryAgainElement.addEventListener('click', errorMessageCloseHandler);
+    buttonOtherFileElement.addEventListener('click', errorMessageCloseHandler);
     document.addEventListener('keydown', errorMessageCloseEscHandler);
-    errorUpload.addEventListener('click', errorMessageCloseHandler);
+    errorUploadElement.addEventListener('click', errorMessageCloseHandler);
   }
 
   function errorMessageCloseHandler() {
-    var errorUpload = mainElement.querySelector('.error');
+    var errorUploadElement = mainElement.querySelector('.error');
 
-    errorUpload.remove();
+    errorUploadElement.remove();
     document.removeEventListener('keydown', errorMessageCloseEscHandler);
-    errorUpload.removeEventListener('click', errorMessageCloseHandler);
+    errorUploadElement.removeEventListener('click', errorMessageCloseHandler);
   }
 
   function errorMessageCloseEscHandler(evt) {
@@ -211,12 +211,12 @@
   window.form = {
     ESC_KEYCODE: ESC_KEYCODE,
     uploadFileElement: uploadFileElement,
-    downloadPhoto: downloadPhoto,
-    effectLevel: effectLevel,
-    effectLevelPin: effectLevelPin,
-    effectLevelLine: effectLevelLine,
+    downloadPhotoElement: downloadPhotoElement,
+    effectLevelElement: effectLevelElement,
+    effectLevelPinElement: effectLevelPinElement,
+    effectLevelLineElement: effectLevelLineElement,
     calculationEffectWithSomeLevel: calculationEffectWithSomeLevel,
-    buttonPublish: buttonPublish,
+    buttonPublishElement: buttonPublishElement,
     checkOctothorpe: checkOctothorpe,
     checkHashtagMaxLength: checkHashtagMaxLength,
     checkHashtagMinLength: checkHashtagMinLength,

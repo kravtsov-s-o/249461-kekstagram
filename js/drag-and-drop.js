@@ -11,15 +11,15 @@
 
   }
 
-  window.form.effectLevelPin.addEventListener('mousedown', function (evt) {
+  window.form.effectLevelPinElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var sliderCoords = getCoords(window.form.effectLevel);
+    var sliderCoords = getCoords(window.form.effectLevelElement);
 
     function mouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
 
-      var clickOffset = (moveEvt.pageX - sliderCoords.left) / (window.form.effectLevelLine.offsetWidth / window.gallery.MAX_SLIDER_VALUE);
+      var clickOffset = (moveEvt.pageX - sliderCoords.left) / (window.form.effectLevelLineElement.offsetWidth / window.gallery.MAX_SLIDER_VALUE);
 
       if (clickOffset < 0) {
         clickOffset = 0;
