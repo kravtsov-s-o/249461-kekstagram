@@ -20,7 +20,7 @@
         return;
       }
 
-      /* for (var i = 0; i < hashtagsArray.length; i++) {
+      for (var i = 0; i < hashtagsArray.length; i++) {
         hashtagsArrayElement = hashtagsArray[i].split('');
 
         if (window.form.checkOctothorpe(hashtagsArrayElement[0])) {
@@ -36,26 +36,7 @@
           window.form.hashtagsElement.style.outlineColor = ERROR_COLOR;
           return;
         }
-      } */
-
-      hashtagsArray.forEach(function (elem) {
-        hashtagsArrayElement = elem.split('');
-
-        if (window.form.checkOctothorpe(hashtagsArrayElement[0])) {
-          window.form.hashtagsElement.setCustomValidity('Хэштеги должны начинаться с #');
-          window.form.hashtagsElement.style.outlineColor = ERROR_COLOR;
-          return;
-        } else if (window.form.checkHashtagMaxLength(hashtagsArrayElement)) {
-          window.form.hashtagsElement.setCustomValidity('Длина хэштега не может быть более 20 символов, включая #');
-          window.form.hashtagsElement.style.outlineColor = ERROR_COLOR;
-          return;
-        } else if (window.form.checkHashtagMinLength(hashtagsArrayElement)) {
-          window.form.hashtagsElement.setCustomValidity('Хэштег не может состоять только из #');
-          window.form.hashtagsElement.style.outlineColor = ERROR_COLOR;
-          return;
-        }
-      });
-
+      }
 
       window.form.hashtagsElement.setCustomValidity('');
     }
