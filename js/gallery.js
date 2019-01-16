@@ -8,6 +8,8 @@
   var FIRST_NUMBER_ARRAY = 0;
   var AMOUNT_PHOTOS = 10;
 
+  var DEBOUNCE_INTERVAL = 500; // ms
+
   var photoListElement = document.querySelector('.pictures');
   var templatePhotoSomeUser = document.querySelector('#picture').content;
 
@@ -24,14 +26,14 @@
     return photoElement;
   }
 
-  window.loadData(function (photos) {
+  window.backend.loadData(function (photos) {
     var fragment = document.createDocumentFragment();
     for (var j = 0; j < photos.length; j++) {
       fragment.appendChild(renderPhoto(photos[j], j));
     }
 
     photoListElement.appendChild(fragment);
-    imgFiltersBlock.classList.remove('img-filters--inactive');
+    imgFiltersElement.classList.remove('img-filters--inactive');
 
     window.photosList = photos;
     window.customPhotosList = photos;
@@ -48,17 +50,16 @@
     document.body.insertAdjacentElement('afterbegin', node);
   });
 
-  var uploadForm = document.querySelector('.img-upload');
+  var uploadFormElement = document.querySelector('.img-upload');
 
-  var imgFiltersBlock = document.querySelector('.img-filters');
+  var imgFiltersElement = document.querySelector('.img-filters');
 
-  var buttonPopular = imgFiltersBlock.querySelector('#filter-popular');
-  var buttonNew = imgFiltersBlock.querySelector('#filter-new');
-  var buttonDiscussed = imgFiltersBlock.querySelector('#filter-discussed');
+  var buttonPopular = imgFiltersElement.querySelector('#filter-popular');
+  var buttonNew = imgFiltersElement.querySelector('#filter-new');
+  var buttonDiscussed = imgFiltersElement.querySelector('#filter-discussed');
 
   var buttonActive = buttonPopular;
 
-  // ----
   function createPosts(arrayName) {
     photoListElement.innerHTML = '';
 
@@ -67,7 +68,7 @@
       fragment.appendChild(renderPhoto(arrayName[j], j));
     }
 
-    photoListElement.appendChild(uploadForm);
+    photoListElement.appendChild(uploadFormElement);
     photoListElement.appendChild(fragment);
   }
 
@@ -96,27 +97,33 @@
     window.customPhotosList = discussedArray;
     return discussedArray;
   }
-  // ----
-
-  // -----------------------------------
-  var DEBOUNCE_INTERVAL = 500; // ms
 
   function debounce(cb) {
     var lastTimeout;
 
     return function () {
+
+      var args = arguments;
+
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
 
-      lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(cb, args);
+      }, DEBOUNCE_INTERVAL);
     };
   }
-  // -----------------------------------
-  var debouncedCreatePosts = debounce(createPosts);
-  // -----------------------------------
 
-  imgFiltersBlock.addEventListener('click', function (evt) {
+  function activationCommentsList(target) {
+    buttonActive.classList.remove('img-filters__button--active');
+    buttonActive = target;
+    buttonActive.classList.add('img-filters__button--active');
+  }
+
+  var debouncedCreatePosts = debounce(createPosts);
+
+  imgFiltersElement.addEventListener('click', function (evt) {
     var target = evt.target;
 
     var popularArray = window.photosList.slice(0);
@@ -127,24 +134,13 @@
     }
 
     if (target === buttonPopular) {
-      buttonActive.classList.remove('img-filters__button--active');
-      buttonActive = target;
-      buttonActive.classList.add('img-filters__button--active');
-
+      activationCommentsList(target);
       debouncedCreatePosts(popularArray);
-
     } else if (target === buttonNew) {
-      buttonActive.classList.remove('img-filters__button--active');
-      buttonActive = target;
-      buttonActive.classList.add('img-filters__button--active');
-
+      activationCommentsList(target);
       debouncedCreatePosts(getRandomNewArray(popularArray));
-
     } else if (target === buttonDiscussed) {
-      buttonActive.classList.remove('img-filters__button--active');
-      buttonActive = target;
-      buttonActive.classList.add('img-filters__button--active');
-
+      activationCommentsList(target);
       debouncedCreatePosts(getDiscussedArray(popularArray));
     }
 

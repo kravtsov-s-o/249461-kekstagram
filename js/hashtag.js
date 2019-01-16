@@ -2,6 +2,7 @@
 
 (function () {
   var ERROR_COLOR = 'red';
+  var MAX_NUMBER_HASHTAG = 5;
 
   window.form.buttonPublish.addEventListener('click', function () {
     if (window.form.hashtagsField.value) {
@@ -13,7 +14,7 @@
         window.form.hashtagsField.setCustomValidity('Хэштеги не могут повторятся');
         window.form.hashtagsField.style.outlineColor = ERROR_COLOR;
         return;
-      } else if (hashtagsArray.length > 5) {
+      } else if (hashtagsArray.length > MAX_NUMBER_HASHTAG) {
         window.form.hashtagsField.setCustomValidity('Максимальное кол-во хэштегов не может быть больше 5');
         window.form.hashtagsField.style.outlineColor = ERROR_COLOR;
         return;

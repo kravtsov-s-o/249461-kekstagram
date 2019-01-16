@@ -5,11 +5,11 @@
   var COMMENTS_STEP = 5;
   var ENTER_KEYCODE = 13;
 
-  var bigPicture = document.querySelector('.big-picture');
-  var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
+  var bigPictureElement = document.querySelector('.big-picture');
+  var bigPictureCloseElement = bigPictureElement.querySelector('.big-picture__cancel');
 
   function renderBigPhoto(photoToView) {
-    var photo = bigPicture.querySelector('.big-picture__preview');
+    var photo = bigPictureElement.querySelector('.big-picture__preview');
 
     photo.querySelector('.big-picture__img img').src = photoToView.url;
     photo.querySelector('.big-picture__social .social__caption').textContent = photoToView.description;
@@ -64,34 +64,34 @@
   var commentsList = [];
 
   function addCommentsToList(addedСomments) {
-    var fragmentComment = document.createDocumentFragment();
+    var commentsFragment = document.createDocumentFragment();
 
     for (var i = 0; i < addedСomments.length; i++) {
-      fragmentComment.appendChild(addedСomments[i]);
+      commentsFragment.appendChild(addedСomments[i]);
     }
 
-    return fragmentComment;
+    return commentsFragment;
   }
 
   function renderCard(photoNumber) {
     var bigPhoto = renderBigPhoto(photoNumber);
 
-    var socialCommentsList = bigPhoto.querySelector('.social__comments');
-    socialCommentsList.innerHTML = '';
+    var socialCommentsElement = bigPhoto.querySelector('.social__comments');
+    socialCommentsElement.innerHTML = '';
 
     var socialCommentCount = bigPhoto.querySelector('.social__comment-count');
     var commentsLoader = bigPhoto.querySelector('.comments-loader');
 
     var commentsListCopy = commentsList.slice(0);
-    var numberOfVisibleComments = START_NUMBERS_OF_COMMENTS;
-    var visibleCommentsList = commentsListCopy.slice(0, numberOfVisibleComments);
+    var visibleCommentsNumber = START_NUMBERS_OF_COMMENTS;
+    var visibleCommentsList = commentsListCopy.slice(0, visibleCommentsNumber);
 
     var visibleCommentsCount = socialCommentCount.querySelector('span');
     visibleCommentsCount.textContent = visibleCommentsList.length;
 
     function moreVisibleComments() {
-      numberOfVisibleComments += COMMENTS_STEP;
-      visibleCommentsList = commentsListCopy.slice(0, numberOfVisibleComments);
+      visibleCommentsNumber += COMMENTS_STEP;
+      visibleCommentsList = commentsListCopy.slice(0, visibleCommentsNumber);
       visibleCommentsCount.textContent = visibleCommentsList.length;
 
       if (commentsListCopy.length === visibleCommentsList.length) {
@@ -102,29 +102,29 @@
     }
 
     commentsLoader.addEventListener('click', function () {
-      socialCommentsList.innerHTML = '';
-      socialCommentsList.appendChild(addCommentsToList(moreVisibleComments()));
+      socialCommentsElement.innerHTML = '';
+      socialCommentsElement.appendChild(addCommentsToList(moreVisibleComments()));
     });
 
-    socialCommentsList.appendChild(addCommentsToList(visibleCommentsList));
+    socialCommentsElement.appendChild(addCommentsToList(visibleCommentsList));
 
-    bigPictureClose.addEventListener('click', closeBigPhoto);
+    bigPictureCloseElement.addEventListener('click', bigPhotoCloseHandler);
     document.addEventListener('keydown', bigPhotoCloseEscHandler);
   }
 
   var bodyHtml = document.querySelector('body');
 
-  var picturesGallery = document.querySelector('.pictures');
+  var picturesElement = document.querySelector('.pictures');
 
   function openingLargePhoto(evt) {
     var target = evt.target;
 
-    while (target !== picturesGallery) {
-      if (target.tagName === 'A') {
+    while (target !== picturesElement) {
+      if (target.className === 'picture') {
         evt.preventDefault();
         var number = target.dataset.id;
         bodyHtml.classList.add('modal-open');
-        bigPicture.classList.remove('hidden');
+        bigPictureElement.classList.remove('hidden');
         commentsList = renderCommentsList(window.customPhotosList[number]);
         renderCard(window.customPhotosList[number]);
 
@@ -134,26 +134,26 @@
     }
   }
 
-  picturesGallery.addEventListener('click', function (evt) {
+  picturesElement.addEventListener('click', function (evt) {
     openingLargePhoto(evt);
   });
 
-  picturesGallery.addEventListener('keydown', function (evt) {
+  picturesElement.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       openingLargePhoto(evt);
     }
   });
 
-  function closeBigPhoto() {
-    bigPicture.classList.add('hidden');
+  function bigPhotoCloseHandler() {
+    bigPictureElement.classList.add('hidden');
     bodyHtml.classList.remove('modal-open');
-    bigPictureClose.removeEventListener('click', closeBigPhoto);
+    bigPictureCloseElement.removeEventListener('click', bigPhotoCloseHandler);
     document.removeEventListener('keydown', bigPhotoCloseEscHandler);
   }
 
   function bigPhotoCloseEscHandler(evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
-      closeBigPhoto();
+      bigPhotoCloseHandler();
     }
   }
 })();
