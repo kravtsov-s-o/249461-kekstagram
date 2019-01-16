@@ -173,6 +173,7 @@
 
   function messageSuccessCloseHandler() {
     var popupSuccessElement = mainElement.querySelector('.success');
+
     popupSuccessElement.remove();
     document.removeEventListener('click', messageSuccessCloseHandler);
     document.removeEventListener('keydown', messageSuccessCloseEscHandler);
@@ -185,6 +186,8 @@
   }
 
   function openErrorMessage() {
+    imgUploadFormElement.reset();
+
     var errorUploadElement = mainElement.querySelector('.error');
 
     mainElement.appendChild(errorMessage);
