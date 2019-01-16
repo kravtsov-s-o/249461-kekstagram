@@ -38,8 +38,8 @@
         }
       } */
 
-      hashtagsArray.forEach(function (elem, i) {
-        hashtagsArrayElement = hashtagsArray[i].split('');
+      hashtagsArray.forEach(function (elem) {
+        hashtagsArrayElement = elem.split('');
 
         if (window.form.checkOctothorpe(hashtagsArrayElement[0])) {
           window.form.hashtagsElement.setCustomValidity('Хэштеги должны начинаться с #');
@@ -55,6 +55,7 @@
           return;
         }
       });
+
 
       window.form.hashtagsElement.setCustomValidity('');
     }

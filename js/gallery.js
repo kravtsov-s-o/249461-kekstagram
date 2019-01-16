@@ -30,12 +30,8 @@
 
   window.backend.loadData(function (photos) {
     var fragment = document.createDocumentFragment();
-    /* for (var j = 0; j < photos.length; j++) {
-      fragment.appendChild(renderPhoto(photos[j], j));
-    } */
-
     photos.forEach(function (element, j) {
-      fragment.appendChild(renderPhoto(photos[j], j));
+      fragment.appendChild(renderPhoto(element, j));
     });
 
     photoListElement.appendChild(fragment);
@@ -70,11 +66,8 @@
     photoListElement.innerHTML = '';
 
     var fragment = document.createDocumentFragment();
-    /* for (var j = 0; j < arrayName.length; j++) {
-      fragment.appendChild(renderPhoto(arrayName[j], j));
-    } */
     arrayName.forEach(function (element, j) {
-      fragment.appendChild(renderPhoto(element[j], j));
+      fragment.appendChild(renderPhoto(element, j));
     });
 
     photoListElement.appendChild(uploadFormElement);
