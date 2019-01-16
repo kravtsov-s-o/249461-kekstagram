@@ -5,18 +5,18 @@
   var MAX_SIZE_PHOTO = 100;
   var SCALE_STEP = 25;
 
-  var scaleValue = document.querySelector('.scale__control--value');
-  var buttonMin = document.querySelector('.scale__control--smaller');
-  var buttonMax = document.querySelector('.scale__control--bigger');
+  var scaleValueElement = document.querySelector('.scale__control--value');
+  var buttonMinElement = document.querySelector('.scale__control--smaller');
+  var buttonMaxElement = document.querySelector('.scale__control--bigger');
 
-  scaleValue.value = '100%';
+  scaleValueElement.value = '100%';
   var currentPhotoScale = MAX_SIZE_PHOTO;
 
   function photoReduction() {
     if (currentPhotoScale > MIN_SIZE_PHOTO) {
       currentPhotoScale -= SCALE_STEP;
       window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
-      scaleValue.value = currentPhotoScale + '%';
+      scaleValueElement.value = currentPhotoScale + '%';
     }
   }
 
@@ -24,13 +24,13 @@
     if (currentPhotoScale < MAX_SIZE_PHOTO) {
       currentPhotoScale += SCALE_STEP;
       window.form.downloadPhoto.style.transform = 'scale(' + (currentPhotoScale / MAX_SIZE_PHOTO) + ')';
-      scaleValue.value = currentPhotoScale + '%';
+      scaleValueElement.value = currentPhotoScale + '%';
     }
   }
 
-  buttonMin.addEventListener('click', photoReduction);
+  buttonMinElement.addEventListener('click', photoReduction);
 
-  buttonMax.addEventListener('click', photoIncrease);
+  buttonMaxElement.addEventListener('click', photoIncrease);
 
-  window.scaleValue = scaleValue;
+  window.scaleValueElement = scaleValueElement;
 })();

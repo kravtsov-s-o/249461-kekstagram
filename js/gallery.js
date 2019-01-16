@@ -11,13 +11,12 @@
   var DEBOUNCE_INTERVAL = 500; // ms
 
   var photoListElement = document.querySelector('.pictures');
-  var templatePhotoSomeUser = document.querySelector('#picture').content;
+  var templatePhotoSomeUserElement = document.querySelector('#picture').content;
 
   var photosList;
-  var customPhotosList;
 
   function renderPhoto(generatedPhoto, number) {
-    var photoElement = templatePhotoSomeUser.cloneNode(true);
+    var photoElement = templatePhotoSomeUserElement.cloneNode(true);
 
     var picture = photoElement.querySelector('.picture');
     picture.dataset.id = number;
@@ -31,15 +30,19 @@
 
   window.backend.loadData(function (photos) {
     var fragment = document.createDocumentFragment();
-    for (var j = 0; j < photos.length; j++) {
+    /* for (var j = 0; j < photos.length; j++) {
       fragment.appendChild(renderPhoto(photos[j], j));
-    }
+    } */
+
+    photos.forEach(function (element, j) {
+      fragment.appendChild(renderPhoto(photos[j], j));
+    });
 
     photoListElement.appendChild(fragment);
     imgFiltersElement.classList.remove('img-filters--inactive');
 
     photosList = photos;
-    customPhotosList = photos;
+    window.gallery.customPhotosList = photos;
   }, function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 100px auto; text-align: center; min-height: 45px; background-color: #3c3614;';
@@ -67,9 +70,12 @@
     photoListElement.innerHTML = '';
 
     var fragment = document.createDocumentFragment();
-    for (var j = 0; j < arrayName.length; j++) {
+    /* for (var j = 0; j < arrayName.length; j++) {
       fragment.appendChild(renderPhoto(arrayName[j], j));
-    }
+    } */
+    arrayName.forEach(function (element, j) {
+      fragment.appendChild(renderPhoto(element[j], j));
+    });
 
     photoListElement.appendChild(uploadFormElement);
     photoListElement.appendChild(fragment);
@@ -82,22 +88,16 @@
     })
     .slice(FIRST_NUMBER_ARRAY, AMOUNT_PHOTOS);
 
-    customPhotosList = randomNewArray;
+    window.gallery.customPhotosList = randomNewArray;
     return randomNewArray;
   }
 
   function getDiscussedArray(arrayName) {
     var discussedArray = arrayName.sort(function (first, second) {
-      if (first.comments.length > second.comments.length) {
-        return -1;
-      } else if (first.comments.length < second.comments.length) {
-        return 1;
-      } else {
-        return 0;
-      }
+      return second.comments.length - first.comments.length;
     });
 
-    customPhotosList = discussedArray;
+    window.gallery.customPhotosList = discussedArray;
     return discussedArray;
   }
 
@@ -130,7 +130,7 @@
     var target = evt.target;
 
     var popularArray = photosList.slice(0);
-    customPhotosList = popularArray;
+    window.gallery.customPhotosList = popularArray;
 
     if (target === 'BUTTON') {
       return;
@@ -146,13 +146,11 @@
       activationCommentsList(target);
       debouncedCreatePosts(getDiscussedArray(popularArray));
     }
-
-    // customPhotosList = customPhotosList;
   });
 
   window.gallery = {
     AVATAR_SIZE: AVATAR_SIZE,
     MAX_SLIDER_VALUE: MAX_SLIDER_VALUE,
-    customPhotosList: customPhotosList
+    customPhotosList: []
   };
 })();

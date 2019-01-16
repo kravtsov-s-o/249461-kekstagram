@@ -3,8 +3,8 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  window.form.uploadFile.addEventListener('change', function () {
-    var file = window.form.uploadFile.files[0];
+  window.form.uploadFileElement.addEventListener('change', function () {
+    var file = window.form.uploadFileElement.files[0];
     var fileName = file.name.toLowerCase();
 
     var match = FILE_TYPES.some(function (it) {

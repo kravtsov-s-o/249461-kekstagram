@@ -53,10 +53,9 @@
   function renderCommentsList(photoToView) {
     var comments = [];
 
-    for (var i = 0; i < photoToView.comments.length; i++) {
-      var customComment = renderComment(photoToView, i);
-      comments.push(customComment);
-    }
+    photoToView.comments.forEach(function (element, i) {
+      comments.push(renderComment(photoToView, i));
+    });
 
     return comments;
   }
@@ -66,9 +65,9 @@
   function addCommentsToList(addedСomments) {
     var commentsFragment = document.createDocumentFragment();
 
-    for (var i = 0; i < addedСomments.length; i++) {
-      commentsFragment.appendChild(addedСomments[i]);
-    }
+    addedСomments.forEach(function (element) {
+      commentsFragment.appendChild(element);
+    });
 
     return commentsFragment;
   }
@@ -112,7 +111,7 @@
     document.addEventListener('keydown', bigPhotoCloseEscHandler);
   }
 
-  var bodyHtml = document.querySelector('body');
+  var bodyHtmlElement = document.querySelector('body');
 
   var picturesElement = document.querySelector('.pictures');
 
@@ -123,7 +122,7 @@
       if (target.className === 'picture') {
         evt.preventDefault();
         var number = target.dataset.id;
-        bodyHtml.classList.add('modal-open');
+        bodyHtmlElement.classList.add('modal-open');
         bigPictureElement.classList.remove('hidden');
         commentsList = renderCommentsList(window.gallery.customPhotosList[number]);
         renderCard(window.gallery.customPhotosList[number]);
@@ -146,7 +145,7 @@
 
   function bigPhotoCloseHandler() {
     bigPictureElement.classList.add('hidden');
-    bodyHtml.classList.remove('modal-open');
+    bodyHtmlElement.classList.remove('modal-open');
     bigPictureCloseElement.removeEventListener('click', bigPhotoCloseHandler);
     document.removeEventListener('keydown', bigPhotoCloseEscHandler);
   }
