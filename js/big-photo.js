@@ -143,16 +143,20 @@
     }
   });
 
-  function bigPictureClickHandler() {
+  function closeBigPhoto() {
     bigPictureElement.classList.add('hidden');
     bodyHtmlElement.classList.remove('modal-open');
     bigPictureCloseElement.removeEventListener('click', bigPictureClickHandler);
     document.removeEventListener('keydown', documentBigPictureKeydownHandler);
   }
 
+  function bigPictureClickHandler() {
+    closeBigPhoto();
+  }
+
   function documentBigPictureKeydownHandler(evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
-      bigPictureClickHandler();
+      closeBigPhoto();
     }
   }
 })();
