@@ -118,7 +118,7 @@
   function openingLargePhoto(evt) {
     var target = evt.target;
 
-    while (target !== picturesElement) {
+    while (target && target !== picturesElement) {
       if (target.className === 'picture') {
         evt.preventDefault();
         var number = target.dataset.id;
