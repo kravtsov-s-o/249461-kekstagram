@@ -23,7 +23,7 @@
     effectLevelElement.classList.add('hidden');
   });
 
-  function uploadCancelClickHandler() {
+  function closeUploadFile() {
     uploadOverlayElement.classList.add('hidden');
     uploadCancelElement.removeEventListener('click', uploadCancelClickHandler);
     document.removeEventListener('keydown', documentUploadCancelKeydownHandler);
@@ -31,12 +31,16 @@
     imgUploadFormElement.reset();
   }
 
+  function uploadCancelClickHandler() {
+    closeUploadFile();
+  }
+
   function documentUploadCancelKeydownHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       if (document.activeElement === uploadPhotoComment || document.activeElement === hashtagsElement) {
         return;
       }
-      uploadCancelClickHandler();
+      closeUploadFile();
     }
   }
 
@@ -167,53 +171,65 @@
 
     mainElement.appendChild(messageSuccess);
     successButtonElement.addEventListener('click', successButtonClickHandler);
-    document.addEventListener('click', function () {
-      successButtonClickHandler();
-    });
-    document.addEventListener('keydown', documentMessageSuccessEscKeydownHandler);
+    document.addEventListener('click', documentMessageSuccessClickHandler);
+    document.addEventListener('keydown', documentMessageSuccessKeydownHandler);
   }
 
-  function successButtonClickHandler() {
+  function closeSuccessMessage() {
     var popupSuccessElement = mainElement.querySelector('.success');
 
     popupSuccessElement.remove();
-    document.removeEventListener('click', successButtonClickHandler);
-    document.removeEventListener('keydown', documentMessageSuccessEscKeydownHandler);
+    document.removeEventListener('click', documentMessageSuccessClickHandler);
+    document.removeEventListener('keydown', documentMessageSuccessKeydownHandler);
   }
 
-  function documentMessageSuccessEscKeydownHandler(evt) {
+  function successButtonClickHandler() {
+    closeSuccessMessage();
+  }
+
+  function documentMessageSuccessClickHandler() {
+    closeSuccessMessage();
+  }
+
+  function documentMessageSuccessKeydownHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      successButtonClickHandler();
+      closeSuccessMessage();
     }
   }
 
   function openErrorMessage() {
     imgUploadFormElement.reset();
 
-    var errorUploadElement = mainElement.querySelector('.error');
-
     mainElement.appendChild(errorMessage);
-    buttonTryAgainElement.addEventListener('click', function () {
-      errorUploadClickHandler();
-    });
-    buttonOtherFileElement.addEventListener('click', function () {
-      errorUploadClickHandler();
-    });
+    buttonTryAgainElement.addEventListener('click', buttonTryAgainClickHandler);
+    buttonOtherFileElement.addEventListener('click', buttonOtherFileClickHandler);
     document.addEventListener('keydown', documentErrorMessageKeydownHandler);
-    errorUploadElement.addEventListener('click', errorUploadClickHandler);
+    document.addEventListener('click', documentErrorUploadClickHandler);
   }
 
-  function errorUploadClickHandler() {
+  function closeErrorMessage() {
     var errorUploadElement = mainElement.querySelector('.error');
 
     errorUploadElement.remove();
     document.removeEventListener('keydown', documentErrorMessageKeydownHandler);
-    errorUploadElement.removeEventListener('click', errorUploadClickHandler);
+    document.removeEventListener('click', documentErrorUploadClickHandler);
+  }
+
+  function buttonTryAgainClickHandler() {
+    closeErrorMessage();
+  }
+
+  function buttonOtherFileClickHandler() {
+    closeErrorMessage();
+  }
+
+  function documentErrorUploadClickHandler() {
+    closeErrorMessage();
   }
 
   function documentErrorMessageKeydownHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      errorUploadClickHandler();
+      closeErrorMessage();
     }
   }
 
