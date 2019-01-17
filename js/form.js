@@ -159,17 +159,15 @@
   });
 
   var successTemplateElement = document.querySelector('#success').content;
-  var messageSuccessElement = successTemplateElement.cloneNode(true);
-  var successButtonElement = messageSuccessElement.querySelector('.success__button');
+  var successButtonElement = successTemplateElement.querySelector('.success__button');
   var errorTemplateElement = document.querySelector('#error').content;
-  var errorMessageElement = errorTemplateElement.cloneNode(true);
-  var buttonTryAgainElement = errorMessageElement.querySelector('.error__button:nth-child(1)');
-  var buttonOtherFileElement = errorMessageElement.querySelector('.error__button:nth-child(2)');
+  var buttonTryAgainElement = errorTemplateElement.querySelector('.error__button:nth-child(1)');
+  var buttonOtherFileElement = errorTemplateElement.querySelector('.error__button:nth-child(2)');
 
   function openSuccessMessage() {
     imgUploadFormElement.reset();
 
-    mainElement.appendChild(messageSuccessElement.cloneNode(true));
+    mainElement.appendChild(successTemplateElement.cloneNode(true));
     successButtonElement.addEventListener('click', successButtonClickHandler);
     document.addEventListener('click', documentMessageSuccessClickHandler);
     document.addEventListener('keydown', documentMessageSuccessKeydownHandler);
@@ -200,7 +198,7 @@
   function openErrorMessage() {
     imgUploadFormElement.reset();
 
-    mainElement.appendChild(errorMessageElement.cloneNode(true));
+    mainElement.appendChild(errorTemplateElement.cloneNode(true));
     buttonTryAgainElement.addEventListener('click', buttonTryAgainClickHandler);
     buttonOtherFileElement.addEventListener('click', buttonOtherFileClickHandler);
     document.addEventListener('keydown', documentErrorMessageKeydownHandler);
