@@ -87,9 +87,9 @@
     }
     target = target.parentNode;
 
-    var targetInput = target.querySelector('input');
+    var targetInputElement = target.querySelector('input');
     downloadPhotoElement.classList.remove('effects__preview--' + effectValue);
-    effectValue = targetInput.value;
+    effectValue = targetInputElement.value;
     downloadPhotoElement.removeAttribute('style');
     downloadPhotoElement.classList.add('effects__preview--' + effectValue);
     window.scaleValueElement.value = '100%';

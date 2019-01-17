@@ -40,16 +40,16 @@
     photosList = photos;
     window.gallery.customPhotosList = photos;
   }, function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 100px auto; text-align: center; min-height: 45px; background-color: #3c3614;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '40px';
-    node.style.lineHeight = '40px';
+    var nodeElement = document.createElement('div');
+    nodeElement.style = 'z-index: 100; margin: 100px auto; text-align: center; min-height: 45px; background-color: #3c3614;';
+    nodeElement.style.position = 'absolute';
+    nodeElement.style.left = 0;
+    nodeElement.style.right = 0;
+    nodeElement.style.fontSize = '40px';
+    nodeElement.style.lineHeight = '40px';
 
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    nodeElement.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', nodeElement);
   });
 
   var uploadFormElement = document.querySelector('.img-upload');
@@ -60,7 +60,7 @@
   var buttonNewElement = imgFiltersElement.querySelector('#filter-new');
   var buttonDiscussedElement = imgFiltersElement.querySelector('#filter-discussed');
 
-  var buttonActive = buttonPopularElement;
+  var buttonActiveElement = buttonPopularElement;
 
   function createPosts(arrayName) {
     photoListElement.innerHTML = '';
@@ -112,9 +112,9 @@
   }
 
   function activationCommentsList(target) {
-    buttonActive.classList.remove('img-filters__button--active');
-    buttonActive = target;
-    buttonActive.classList.add('img-filters__button--active');
+    buttonActiveElement.classList.remove('img-filters__button--active');
+    buttonActiveElement = target;
+    buttonActiveElement.classList.add('img-filters__button--active');
   }
 
   var debouncedCreatePosts = debounce(createPosts);

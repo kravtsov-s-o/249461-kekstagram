@@ -22,32 +22,32 @@
   }
 
   function renderAvatar(autorAvatar, i) {
-    var avatar = document.createElement('img');
-    avatar.className = 'social__picture';
-    avatar.src = autorAvatar.comments[i].avatar;
-    avatar.alt = 'Аватар комментатора фотографии';
-    avatar.width = window.gallery.AVATAR_SIZE;
-    avatar.height = window.gallery.AVATAR_SIZE;
+    var avatarElement = document.createElement('img');
+    avatarElement.className = 'social__picture';
+    avatarElement.src = autorAvatar.comments[i].avatar;
+    avatarElement.alt = 'Аватар комментатора фотографии';
+    avatarElement.width = window.gallery.AVATAR_SIZE;
+    avatarElement.height = window.gallery.AVATAR_SIZE;
 
-    return avatar;
+    return avatarElement;
   }
 
   function renderMessage(commentText, i) {
-    var message = document.createElement('p');
-    message.className = 'social__text';
-    message.textContent = commentText.comments[i].message;
+    var messageElement = document.createElement('p');
+    messageElement.className = 'social__text';
+    messageElement.textContent = commentText.comments[i].message;
 
-    return message;
+    return messageElement;
   }
 
   function renderComment(readyComment, i) {
-    var comment = document.createElement('li');
-    comment.className = 'social__comment';
+    var commentElement = document.createElement('li');
+    commentElement.className = 'social__comment';
 
-    comment.appendChild(renderAvatar(readyComment, i));
-    comment.appendChild(renderMessage(readyComment, i));
+    commentElement.appendChild(renderAvatar(readyComment, i));
+    commentElement.appendChild(renderMessage(readyComment, i));
 
-    return comment;
+    return commentElement;
   }
 
   function renderCommentsList(photoToView) {
