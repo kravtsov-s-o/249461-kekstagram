@@ -159,13 +159,12 @@
   });
 
   var successTemplateElement = document.querySelector('#success').content;
-  var successButtonElement = successTemplateElement.querySelector('.success__button');
   var errorTemplateElement = document.querySelector('#error').content;
-  var buttonTryAgainElement = errorTemplateElement.querySelector('.error__button:nth-child(1)');
-  var buttonOtherFileElement = errorTemplateElement.querySelector('.error__button:nth-child(2)');
 
   function openSuccessMessage() {
     imgUploadFormElement.reset();
+
+    var successButtonElement = successTemplateElement.querySelector('.success__button');
 
     mainElement.appendChild(successTemplateElement.cloneNode(true));
     successButtonElement.addEventListener('click', successButtonClickHandler);
@@ -197,6 +196,9 @@
 
   function openErrorMessage() {
     imgUploadFormElement.reset();
+
+    var buttonTryAgainElement = errorTemplateElement.querySelector('.error__button:nth-child(1)');
+    var buttonOtherFileElement = errorTemplateElement.querySelector('.error__button:nth-child(2)');
 
     mainElement.appendChild(errorTemplateElement.cloneNode(true));
     buttonTryAgainElement.addEventListener('click', buttonTryAgainClickHandler);
