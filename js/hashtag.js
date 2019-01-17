@@ -4,7 +4,7 @@
   var ERROR_COLOR = 'red';
   var MAX_NUMBER_HASHTAG = 5;
 
-  window.form.buttonPublishElement.addEventListener('click', function () {
+  window.form.hashtagsElement.addEventListener('input', function () {
     if (window.form.hashtagsElement.value) {
       var hashtagsValue = window.form.hashtagsElement.value.toLowerCase().trim();
       var hashtagsArray = hashtagsValue.split(' ');
