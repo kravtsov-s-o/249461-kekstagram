@@ -107,8 +107,8 @@
 
     socialCommentsElement.appendChild(addCommentsToList(visibleCommentsList));
 
-    bigPictureCloseElement.addEventListener('click', bigPhotoCloseHandler);
-    document.addEventListener('keydown', bigPhotoCloseEscHandler);
+    bigPictureCloseElement.addEventListener('click', bigPhotoCloseClickHandler);
+    document.addEventListener('keydown', bigPhotoCloseEscKeydownHandler);
   }
 
   var bodyHtmlElement = document.querySelector('body');
@@ -143,16 +143,16 @@
     }
   });
 
-  function bigPhotoCloseHandler() {
+  function bigPhotoCloseClickHandler() {
     bigPictureElement.classList.add('hidden');
     bodyHtmlElement.classList.remove('modal-open');
-    bigPictureCloseElement.removeEventListener('click', bigPhotoCloseHandler);
-    document.removeEventListener('keydown', bigPhotoCloseEscHandler);
+    bigPictureCloseElement.removeEventListener('click', bigPhotoCloseClickHandler);
+    document.removeEventListener('keydown', bigPhotoCloseEscKeydownHandler);
   }
 
-  function bigPhotoCloseEscHandler(evt) {
+  function bigPhotoCloseEscKeydownHandler(evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
-      bigPhotoCloseHandler();
+      bigPhotoCloseClickHandler();
     }
   }
 })();

@@ -15,28 +15,28 @@
   uploadFileElement.addEventListener('change', function () {
     uploadOverlayElement.classList.remove('hidden');
 
-    uploadCancelElement.addEventListener('click', uploadPhotoCloseHandler);
-    document.addEventListener('keydown', uploadPhotoCloseEscHandler);
+    uploadCancelElement.addEventListener('click', uploadPhotoCloseClickHandler);
+    document.addEventListener('keydown', uploadPhotoCloseEscKeydownHandler);
 
     window.scaleValueElement.value = '100%';
 
     effectLevelElement.classList.add('hidden');
   });
 
-  function uploadPhotoCloseHandler() {
+  function uploadPhotoCloseClickHandler() {
     uploadOverlayElement.classList.add('hidden');
-    uploadCancelElement.removeEventListener('click', uploadPhotoCloseHandler);
-    document.removeEventListener('keydown', uploadPhotoCloseEscHandler);
+    uploadCancelElement.removeEventListener('click', uploadPhotoCloseClickHandler);
+    document.removeEventListener('keydown', uploadPhotoCloseEscKeydownHandler);
 
     imgUploadFormElement.reset();
   }
 
-  function uploadPhotoCloseEscHandler(evt) {
+  function uploadPhotoCloseEscKeydownHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       if (document.activeElement === uploadPhotoComment || document.activeElement === hashtagsElement) {
         return;
       }
-      uploadPhotoCloseHandler();
+      uploadPhotoCloseClickHandler();
     }
   }
 
@@ -166,22 +166,22 @@
     imgUploadFormElement.reset();
 
     mainElement.appendChild(messageSuccess);
-    successButtonElement.addEventListener('click', messageSuccessCloseHandler);
-    document.addEventListener('click', messageSuccessCloseHandler);
-    document.addEventListener('keydown', messageSuccessCloseEscHandler);
+    successButtonElement.addEventListener('click', messageSuccessCloseClickHandler);
+    document.addEventListener('click', messageSuccessCloseClickHandler);
+    document.addEventListener('keydown', messageSuccessCloseEscKeydownHandler);
   }
 
-  function messageSuccessCloseHandler() {
+  function messageSuccessCloseClickHandler() {
     var popupSuccessElement = mainElement.querySelector('.success');
 
     popupSuccessElement.remove();
-    document.removeEventListener('click', messageSuccessCloseHandler);
-    document.removeEventListener('keydown', messageSuccessCloseEscHandler);
+    document.removeEventListener('click', messageSuccessCloseClickHandler);
+    document.removeEventListener('keydown', messageSuccessCloseEscKeydownHandler);
   }
 
-  function messageSuccessCloseEscHandler(evt) {
+  function messageSuccessCloseEscKeydownHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      messageSuccessCloseHandler();
+      messageSuccessCloseClickHandler();
     }
   }
 
@@ -191,23 +191,23 @@
     var errorUploadElement = mainElement.querySelector('.error');
 
     mainElement.appendChild(errorMessage);
-    buttonTryAgainElement.addEventListener('click', errorMessageCloseHandler);
-    buttonOtherFileElement.addEventListener('click', errorMessageCloseHandler);
-    document.addEventListener('keydown', errorMessageCloseEscHandler);
-    errorUploadElement.addEventListener('click', errorMessageCloseHandler);
+    buttonTryAgainElement.addEventListener('click', errorMessageCloseClickHandler);
+    buttonOtherFileElement.addEventListener('click', errorMessageCloseClickHandler);
+    document.addEventListener('keydown', errorMessageCloseEscKeydownHandler);
+    errorUploadElement.addEventListener('click', errorMessageCloseClickHandler);
   }
 
-  function errorMessageCloseHandler() {
+  function errorMessageCloseClickHandler() {
     var errorUploadElement = mainElement.querySelector('.error');
 
     errorUploadElement.remove();
-    document.removeEventListener('keydown', errorMessageCloseEscHandler);
-    errorUploadElement.removeEventListener('click', errorMessageCloseHandler);
+    document.removeEventListener('keydown', errorMessageCloseEscKeydownHandler);
+    errorUploadElement.removeEventListener('click', errorMessageCloseClickHandler);
   }
 
-  function errorMessageCloseEscHandler(evt) {
+  function errorMessageCloseEscKeydownHandler(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      messageSuccessCloseHandler();
+      messageSuccessCloseClickHandler();
     }
   }
 

@@ -16,7 +16,7 @@
 
     var sliderCoords = getCoords(window.form.effectLevelElement);
 
-    function mouseMoveHandler(moveEvt) {
+    function documentMouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
 
       var clickOffset = (moveEvt.pageX - sliderCoords.left) / (window.form.effectLevelLineElement.offsetWidth / window.gallery.MAX_SLIDER_VALUE);
@@ -30,14 +30,14 @@
       window.form.calculationEffectWithSomeLevel(clickOffset);
     }
 
-    function mouseUpHandler(upEvt) {
+    function documentMouseUpHandler(upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
+      document.removeEventListener('mousemove', documentMouseMoveHandler);
+      document.removeEventListener('mouseup', documentMouseUpHandler);
     }
 
-    document.addEventListener('mousemove', mouseMoveHandler);
-    document.addEventListener('mouseup', mouseUpHandler);
+    document.addEventListener('mousemove', documentMouseMoveHandler);
+    document.addEventListener('mouseup', documentMouseUpHandler);
   });
 })();
