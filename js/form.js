@@ -164,9 +164,10 @@
   function openSuccessMessage() {
     imgUploadFormElement.reset();
 
-    var successButtonElement = successTemplateElement.querySelector('.success__button');
+    var successTemplateCloneElement = successTemplateElement.cloneNode(true);
+    var successButtonElement = successTemplateCloneElement.querySelector('.success__button');
 
-    mainElement.appendChild(successTemplateElement.cloneNode(true));
+    mainElement.appendChild(successTemplateCloneElement);
     successButtonElement.addEventListener('click', successButtonClickHandler);
     document.addEventListener('click', documentMessageSuccessClickHandler);
     document.addEventListener('keydown', documentMessageSuccessKeydownHandler);
@@ -197,10 +198,11 @@
   function openErrorUpload() {
     imgUploadFormElement.reset();
 
-    var buttonTryAgainElement = errorTemplateElement.querySelector('.error__button:nth-child(1)');
-    var buttonOtherFileElement = errorTemplateElement.querySelector('.error__button:nth-child(2)');
+    var errorTemplateCloneElement = errorTemplateElement.cloneNode(true);
+    var buttonTryAgainElement = errorTemplateCloneElement.querySelector('.error__button:nth-child(1)');
+    var buttonOtherFileElement = errorTemplateCloneElement.querySelector('.error__button:nth-child(2)');
 
-    mainElement.appendChild(errorTemplateElement.cloneNode(true));
+    mainElement.appendChild(errorTemplateCloneElement);
     buttonTryAgainElement.addEventListener('click', buttonTryAgainClickHandler);
     buttonOtherFileElement.addEventListener('click', buttonOtherFileClickHandler);
     document.addEventListener('keydown', documentErrorUploadEscKeydownHandler);
